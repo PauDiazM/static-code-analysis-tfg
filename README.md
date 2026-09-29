@@ -34,7 +34,7 @@ examples/   Example source code used for analysis
 
 ## Author
 
-Pau Díaz
+Pau Díaz Martínez
 
 Bachelor's Degree in Computer Science
 Universitat Autònoma de Barcelona
