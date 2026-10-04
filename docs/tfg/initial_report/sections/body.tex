@@ -53,16 +53,14 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 
 \objectiu{
     Implementar l'eina en C\#.
-
 }{
     C\# ofereix un sistema de tipus estàtic i un model orientat a objectes que faciliten el desenvolupament d'una arquitectura modular i extensible. A més, l'ecosistema .NET proporciona eines madures per al desenvolupament i testing de l'eina.
 }
 
 \objectiu{
-    Testejar l'eina en llenguatges fortament tipats (C\#, C++, Java, etc.).
-
+    Validar la capacitat de la representació intermèdia per modelar els conceptes comuns entre diferents llenguatges.
 }{
-    Aquests llenguatges comparteixen diversos conceptes estructurals i disposen d'eines d'anàlisi com Roslyn i Clang, que faciliten l'obtenció d'informació sintàctica i semàntica. Això permetrà comprovar que la representació intermèdia és capaç de modelar conceptes comuns entre diferents llenguatges.
+    Es validarà l'eina principalment amb llenguatges fortament tipats, com C\#, C++ o Java. Posteriorment, es podrà provar amb un llenguatge amb característiques diferents, com Python, per analitzar fins a quin punt les abstraccions definides són generalitzables i identificar les seves limitacions.
 }
 
 \objectiu{
