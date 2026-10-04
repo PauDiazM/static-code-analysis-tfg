@@ -431,3 +431,24 @@ FodyWeavers.xsd
 #Other files
 conventional_commits.md
 entregues/
+
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+
+# Generated PDF
+*.pdf
