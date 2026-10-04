@@ -27,6 +27,11 @@ Finalment, de cara a depurar o mantenir el codi, aquesta representació ajuda a 
 
 
 \subsection*{Eines i enfocaments existents}
+L'anàlisi estàtica de codi és un camp que té un ampli desenvolupament al darrere i, per tant, ja existeixen diverses eines que duen a terme aquest tipus d'anàlisi. Cada una d'elles, però, té un funcionament i uns objectius una mica diferents. Per exemple, Tree-sitter permet obtenir arbres sintàctics de diferents llenguatges \cite{tree_sitter}, mentre que Joern utilitza Code Property Graphs com a representació intermèdia comuna per a l'anàlisi de codi \cite{joern_cpg}. CodeQL ofereix una plataforma més completa orientada a realitzar consultes i anàlisis sobre bases de codi \cite{codeql}. També existeixen propostes com Koncepto, que introdueixen una capa d'abstracció sobre el codi per representar conceptes i invariants d'alt nivell \cite{koncepto}.
+
+Per tant, ja hi ha diverses eines en aquest àmbit que duen a terme, de forma més o menys completa, l'anàlisi de codi. Aleshores, la proposta d'aquest projecte no pretén substituir ni millorar directament cap d'aquestes eines, sinó estudiar i implementar una abstracció pròpia centrada en representar conceptes comuns de diferents llenguatges, com poden ser classes, funcions, templates i interfícies, tenint en compte les seves respectives diferències, o relacions d'herència. L'objectiu és desacoblar tant com sigui possible les característiques específiques de cada llenguatge de les representacions i anàlisis posteriors, mitjançant una capa intermèdia comuna encarregada de proporcionar les abstraccions corresponents. Així doncs, es podrà estudiar fins a quin punt és possible utilitzar una representació comuna per a diferents llenguatges sense perdre precisió ni capacitat d'anàlisi.
+
+A més, diverses empreses del sector, com JetBrains, desenvolupen eines d'anàlisi i comprensió de codi, fet que evidencia l'interès existent en aquest tipus de tecnologies tant en l'àmbit acadèmic com en l'àmbit industrial \cite{jetbrains_inspectopedia}.
 
 
 \subsection*{Context i motivació del projecte}
@@ -44,6 +49,20 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
     Dissenyar una eina d'anàlisi estàtica de software.
 }{
     Aquesta eina permetrà analitzar i identificar de manera visual les dependències i fluxos d'execució del programa, exposant possibles problemes en el disseny del software.
+}
+
+\objectiu{
+    Implementar l'eina en C\#.
+
+}{
+    C\# ofereix un sistema de tipus estàtic i un model orientat a objectes que faciliten el desenvolupament d'una arquitectura modular i extensible. A més, l'ecosistema .NET proporciona eines madures per al desenvolupament i testing de l'eina.
+}
+
+\objectiu{
+    Testejar l'eina en llenguatges fortament tipats (C\#, C++, Java, etc.).
+
+}{
+    Aquests llenguatges comparteixen diversos conceptes estructurals i disposen d'eines d'anàlisi com Roslyn i Clang, que faciliten l'obtenció d'informació sintàctica i semàntica. Això permetrà comprovar que la representació intermèdia és capaç de modelar conceptes comuns entre diferents llenguatges.
 }
 
 \objectiu{
@@ -75,8 +94,9 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 
 \objectiu{
     Validar l'eina amb exemples pràctics i casos d'ús reals.
+
 }{
-    Aquest objectiu permet extreure conclusions sobre la utilitat de l'eina en casos d'ús reals, així com identificar possibles millores i funcionalitats a implementar.
+    Aquest objectiu permetrà extreure conclusions sobre la utilitat de l'eina en casos d'ús reals, així com identificar possibles millores i funcionalitats a implementar. Per avaluar-ho, es definiran diferents casos de prova sobre projectes reals o representatius i es compararan els resultats obtinguts amb els esperats, tenint en compte també el temps necessari per realitzar l'anàlisi.
 }
 
 \objectiu{
@@ -87,27 +107,54 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 
 \objectiu{
     Analitzar la utilitat de l'eina en la millora de la qualitat del software.
+
 }{
-    Aquest objectiu permetrà avaluar l'impacte de l'eina tant en la millora de la qualitat del software com en la velocitat d'identificació d'errors i punts de millora, a més de la reducció del temps de desnvolupament i manteniment del mateix.
+    Aquest objectiu permetrà avaluar la utilitat de l'eina en la detecció i comprensió de problemes estructurals del software, així com en la identificació de punts de millora. Per avaluar-ho, es compararà l'anàlisi realitzada amb i sense l'eina, observant els problemes detectats i el temps necessari per identificar-los.
 }
 
 \end{objectius}
-
 
 \section*{Metodologia}
 El desenvolupament del projecte seguirà una metodologia iterativa i incremental. Inicialment, es dissenyarà una arquitectura i les principals funcionalitats de l'eina, que posteriorment seran implementades. Durant aquest procés, s'anirà avaluant el correcte funcionament de les característiques implementades mitjançant proves, a més de les reunions de seguiment periòdiques amb el tutor. En cas de detectar errors o mancances, es revisarà el disseny per tal de corregir-los o incorporar els elements necessaris. L'objectiu principal d'aquesta metodologia és mantenir un desenvolupament àgil i flexible, prioritzant la netedat i la qualitat del software desenvolupat.
 En quant als objectius, aquests serviran per marcar les fites del projecte, ja que cada un d'ells comporta un conjunt de fncionalitats a implementar. Es considerarà com a complert un objectiu quan s'hagin implementat i testejat totes les funcionalitats necessàries.
 
 \section*{Planificació}
+\begin{tabularx}{\textwidth}{@{}p{2cm}X@{}}
+
+    \textbf{15-11} & Disseny de l'estructura interna del programa (classes, relacions, etc.) i implementació de la capa d'abstracció encarregada de convertir la informació proporcionada pel parser en la representació intermèdia. \\[0.3cm]
+
+    \textbf{13-12} & Implementació dels diferents mètodes d'anàlisi: graf de dependències, CFG, graf de crides, etc., així com els ajustos necessaris de la representació intermèdia. \\[0.3cm]
+
+    \textbf{03-01} & Implementació de la visualització, testing i validació de l'eina mitjançant diferents casos d'ús. \\[0.3cm]
+
+    \textbf{17-01} & Anàlisi dels resultats obtinguts, finalització de la memòria i entrega del document final.
+
+\end{tabularx}
+
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/estructura_inicial_TFG.png}
-    \caption{Arquitectura general de l'eina.}
+    \caption{Esquema incial de l'arquitectura general de l'eina.}
     \label{fig:arquitectura}
 \end{figure}
+
+\section*{Fonts}
+
+Per al desenvolupament del projecte s'han consultat diferents tipus de fonts relacionades amb l'anàlisi estàtica de software, els compiladors i les representacions intermèdies de codi.
+
+Com a referència general sobre els processos de compilació i les diferents fases d'anàlisi del codi font, s'ha consultat el llibre \textit{Compilers: Principles, Techniques, and Tools}, d'Aho et al. \cite{aho_compilers}. Aquesta obra proporciona una base teòrica sobre conceptes com l'anàlisi lèxica i sintàctica, l'anàlisi semàntica, les representacions intermèdies i l'anàlisi del flux de control.
+
+També s'ha consultat el treball de Yamaguchi et al. sobre els \textit{Code Property Graphs} \cite{yamaguchi_cpg}, especialment rellevant per al projecte, ja que presenta una representació que combina informació sintàctica, de flux de control i de dependències del programa. Aquesta referència permet situar la proposta del projecte dins del context d'altres aproximacions que utilitzen una representació comuna per a l'anàlisi de codi.
+
+Pel que fa a les eines existents, s'ha consultat la documentació de Tree-sitter \cite{tree_sitter}, Joern \cite{joern_cpg}, CodeQL \cite{codeql} i Clang/LLVM \cite{clang_llvm}. Aquestes eines permeten estudiar diferents aproximacions actuals al parsing, la representació i l'anàlisi de codi, així com les possibilitats d'utilitzar informació comuna entre diferents llenguatges.
+
+També s'han consultat propostes relacionades amb l'abstracció de conceptes de codi, com Koncepto \cite{koncepto}, així com recursos orientats a l'anàlisi estàtica en l'àmbit industrial, com la guia de Static Code Analysis de JetBrains \cite{static_code_analysis_jetbrains}.
+
+Finalment, s'han utilitzat alguns recursos de caràcter més divulgatiu per complementar la consulta de conceptes concrets, com les explicacions sobre arbres sintàctics abstractes \cite{balapriya_ast}, grafs de dependències \cite{gfg_dependencygraph} i grafs de flux de control \cite{gfg_controlflowgraph}.
+
+\printbibliography
 
 \section*{Ús de la IA}
 Durant l'elaboració d'aquest informe inicial, s'ha utilitzat la IA, concretament la versió gratuita de ChatGPT. Ha tingut la funció de millorar la redacció i la gramàtica del text, a més de respondre a consultes sobre com dur a terme determinades coses en LaTeX. A més a més, s'ha utilitzat per a realitzar búsquedes d'informació sobre projectes o papers rellevants.
 Quant al desenvolupament del projecte, la IA tindrà un paper similar. A més a més, s'utilitzarà, de forma molt guiada, per a generar fragments de codi però, no per a generar l'arquitectura de l'eina ni per a generar funcionalitats completes. Per tant, la IA tindrà un paper de suport, ajudant a millorar la productivitat i eficiència del treball realitzat però, en cap cas, substituint la feina de l'autor del projecte.
 
-\printbibliography
