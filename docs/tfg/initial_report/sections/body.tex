@@ -48,6 +48,7 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 
 
 \section*{Objectius}
+
 \begin{objectius}
 
 \objectiu{
@@ -65,13 +66,13 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 \objectiu{
     Validar la capacitat de la representació intermèdia per modelar els conceptes comuns entre diferents llenguatges.
 }{
-    Es validarà l'eina principalment amb llenguatges fortament tipats, com C\#, C++ o Java. Posteriorment, es podrà provar amb un llenguatge amb característiques diferents, com Python, per analitzar fins a quin punt les abstraccions definides són generalitzables i identificar les seves limitacions.
+    Es validarà l'eina principalment amb llenguatges fortament tipats, com C\#, C++ o Java, analitzant quina part dels elements rellevants de cada llenguatge es pot modelar mitjançant la representació intermèdia. Posteriorment, es podrà provar amb un llenguatge amb característiques diferents, com Python, per analitzar fins a quin punt les abstraccions definides són generalitzables i identificar les seves limitacions.
 }
 
 \objectiu{
-    Fer l'eina independent del llenguatge de programació analitzat.
+    Avaluar fins a quin punt la representació intermèdia permet desacoblar l'eina del llenguatge de programació analitzat.
 }{
-    Aquest objectiu permet convertir l'eina en un programa reutilitzable i adaptable a diferents llenguatges de programació, augmentant la seva versatilitat i potencial d'ús.
+    Aquest objectiu permetrà determinar fins a quin punt les característiques específiques de cada llenguatge poden ser tractades mitjançant una representació comuna, així com identificar quins elements requereixen abstraccions específiques.
 }
 
 \objectiu{
@@ -87,19 +88,15 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 }
 
 \objectiu{
-    Garantir el correcte funcionament de l'eina amb un subconjunt
-    representatiu dels elements del llenguatge analitzat.
+    Garantir el correcte funcionament de l'eina amb un subconjunt representatiu dels elements del llenguatge analitzat.
 }{
-    Aquest objectiu permet delimitar l'abast del projecte i establir
-    un conjunt concret de funcionalitats sobre les quals avaluar
-    el correcte funcionament de l'eina.
+    Aquest objectiu permet delimitar l'abast del projecte i establir un conjunt concret de funcionalitats sobre les quals avaluar el correcte funcionament de l'eina. Per avaluar-ho, es definiran diferents casos de prova i es compararan els resultats obtinguts amb una referència, com una eina existent o resultats verificats manualment, mitjançant mètriques com la precisió i el recall.
 }
 
 \objectiu{
     Validar l'eina amb exemples pràctics i casos d'ús reals.
-
 }{
-    Aquest objectiu permetrà extreure conclusions sobre la utilitat de l'eina en casos d'ús reals, així com identificar possibles millores i funcionalitats a implementar. Per avaluar-ho, es definiran diferents casos de prova sobre projectes reals o representatius i es compararan els resultats obtinguts amb els esperats, tenint en compte també el temps necessari per fer l'anàlisi.
+    Aquest objectiu permetrà extreure conclusions sobre la utilitat de l'eina en casos d'ús reals, així com identificar possibles millores i funcionalitats a implementar. Per avaluar-ho, es definiran diferents casos de prova sobre projectes reals o representatius i es tindrà en compte el temps necessari per fer l'anàlisi.
 }
 
 \objectiu{
@@ -109,8 +106,7 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 }
 
 \objectiu{
-    Analitzar la utilitat de l'eina en la millora de la qualitat del software.
-
+    Analitzar la utilitat de l'eina en la detecció i comprensió de problemes estructurals del software.
 }{
     Aquest objectiu permetrà avaluar la utilitat de l'eina en la detecció i comprensió de problemes estructurals del software, així com en la identificació de punts de millora. Per avaluar-ho, es compararà l'anàlisi elaborada amb l'eina i sense, observant els problemes detectats i el temps necessari per identificar-los.
 }
