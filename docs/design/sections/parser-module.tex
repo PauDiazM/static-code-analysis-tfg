@@ -1,0 +1,24 @@
+\section*{Mòdul del parser}
+Aquest mòdul és l'encarregat de conectar el parser amb la resta del sistema. La seva funció és rebre el fitxer, conectar-se amb el parser i retornar el resultat obtingut.
+L'objectiu d'aquest mòdul és connectar amb el parser, recollir la informació i retornar-la al programa encarregat de crear la representació intermitja (IR).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/parser-module.png}
+    \caption{Arquitectura del mòdul del parser}
+    \label{fig:parser_module}
+\end{figure}
+
+Aquest mòdul s'implementarà de manera progressiva, començant per una versió inicial que només contingui les funciones bàsiques i s'anirà interant sobre aquest primer prototip. Els objectius d'aquest mòdul són: \\
+\\
+\begin{tabular}{|c|c|}
+    
+    \textbf{Versió inicial} & \textbf{Versió final} \\
+    \hline
+    Treball únicament amb arxius individuals & Treball amb projectes complets \\ [0.3cm]
+
+    Especificació manual del llenguatge & Detecció automàtica del llenguatge \\ [0.3cm]
+
+    Instanciament manual del parser & Instanciament automàtic del parser \\ [0.3cm]
+
+\end{tabular}

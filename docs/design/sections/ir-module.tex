@@ -1,0 +1,9 @@
+\section*{Mòdul de representació intermitja (IR)}
+Aquest mòdul és l'encarregat de traduir la sortida del parser, que depèn tant del llenguatge analitzat com de la implementació concreta del parser, a una representació intermèdia (IR) independent d'aquests factors. El seu objectiu és permetre que els mòduls d'anàlisi posteriors accedeixin a la informació del programa mitjançant una estructura comuna, sense haver de realitzar adaptacions específiques per a cada llenguatge o parser.
+
+Aquesta traducció es basa en el principi de generalització dels components fonamentals dels llenguatges de programació. L'objectiu és agrupar components de diferents llenguatges que presenten característiques comunes, tot i les seves diferències sintàctiques o semàntiques, en una representació intermèdia comuna.
+
+Per exemple, es poden definir categories generals com `TypeDef`, que representi les definicions de tipus, i distingir entre tipus compostos (classes, estructures, unions, etc.) i tipus primitius (`int`, `float`, `char`, etc.). De la mateixa manera, conceptes com les interfícies i les classes abstractes es poden representar mitjançant una estructura comuna que en preservi les particularitats rellevants.
+
+Aquesta generalització té com a objectiu proporcionar una representació independent del llenguatge d'origen, mantenint la informació estructural i semàntica necessària perquè els mòduls d'anàlisi posteriors puguin operar-hi sense dependre del parser utilitzat.
+
