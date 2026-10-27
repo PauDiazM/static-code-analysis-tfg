@@ -1,36 +1,87 @@
 namespace Parsers;
-
-public enum ElementCategory
-{
-    Declaration,
-    Callable,
-    Member,
-    StatementExpression
-}
-
 public enum ElementKind
 {
     Unknown,
-    Using,
+
+    CompilationUnit,
+    Import,
     Namespace,
-    Identifier,
-    PredefinedType,
+
+    Class,
+    Struct,
+    Template,
+    Interface,
+    Record,
+    Enum,
+
+    Callable,
+    Property,
+    Indexer,
+    Field,
+    Event,
+    Delegate,
+
     ParameterList,
+    Parameter,
+    VariableDeclaration,
+    VariableDeclarator,
+
+    PredefinedType,
+    Identifier,
+    GenericName,
+    QualifiedName,
+    ArrayType,
+    NullableType,
+
     Block,
+    LocalDeclaration,
     ExpressionStatement,
+    Return,
+    Throw,
+    Break,
+    Continue,
+    If,
+    Else,
+    For,
+    ForEach,
+    While,
+    DoWhile,
+    Switch,
+    SwitchSection,
+    Try,
+    Catch,
+    Finally,
+
+    Invocation,
     MemberAccess,
     ArgumentList,
     Argument,
     Literal,
-    Class,
-    Struct,
-    Interface,
-    Method,
-    Constructor,
-    Field,
-    Property,
-    Parameter,
-    Invocation,
-    If,
-    Return
+    Assignment,
+    BinaryExpression,
+    PrefixUnaryExpression,
+    PostfixUnaryExpression,
+    ConditionalExpression,
+    ObjectCreation,
+    ImplicitObjectCreation,
+    ElementAccess,
+    ParenthesizedExpression,
+    Cast,
+    Await,
+    ConditionalAccess,
+    AnonymousMethod,
+    Lambda,
+
+    Initializer,
+    ArrayCreation,
+    ImplicitArrayCreation,
+
+    ArrowExpression,
+    EqualsValue,
+    Attribute,
+    AttributeList,
+
+    Interpolation,
+    InterpolatedString,
+    InterpolatedText
 }

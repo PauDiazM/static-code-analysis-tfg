@@ -1,31 +1,116 @@
-namespace Parsers;
+namespace Parsers.Roslyn;
 
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Parsers;
 
 public class CSharpParser : IParser
 {
     private readonly string _filepath;
 
-    private static readonly Dictionary<string, ElementKind> Translator = new()
+    private readonly RoslynRuleSet _ruleSet = new();
+
+    private static readonly Dictionary<Type, ElementKind> _nodeToElementKindTranslator = new()
     {
-        [typeof(UsingDirectiveSyntax).Name] = ElementKind.Using,
-        [typeof(IdentifierNameSyntax).Name] = ElementKind.Identifier,
-        [typeof(ClassDeclarationSyntax).Name] = ElementKind.Class,
-        [typeof(MethodDeclarationSyntax).Name] = ElementKind.Method,
-        [typeof(PredefinedTypeSyntax).Name] = ElementKind.PredefinedType,
-        [typeof(ParameterListSyntax).Name] = ElementKind.ParameterList,
-        [typeof(BlockSyntax).Name] = ElementKind.Block,
-        [typeof(ExpressionStatementSyntax).Name] = ElementKind.ExpressionStatement,
-        [typeof(InvocationExpressionSyntax).Name] = ElementKind.Invocation,
-        [typeof(MemberAccessExpressionSyntax).Name] = ElementKind.MemberAccess,
-        [typeof(ArgumentListSyntax).Name] = ElementKind.ArgumentList,
-        [typeof(ArgumentSyntax).Name] = ElementKind.Argument,
-        [typeof(LiteralExpressionSyntax).Name] = ElementKind.Literal
+        // Compilation and namespaces
+        [typeof(CompilationUnitSyntax)] = ElementKind.CompilationUnit,
+        [typeof(UsingDirectiveSyntax)] = ElementKind.Import,
+        [typeof(NamespaceDeclarationSyntax)] = ElementKind.Namespace,
+        [typeof(FileScopedNamespaceDeclarationSyntax)] = ElementKind.Namespace,
+
+        // Type declarations
+        [typeof(ClassDeclarationSyntax)] = ElementKind.Class,
+        [typeof(StructDeclarationSyntax)] = ElementKind.Struct,
+        [typeof(InterfaceDeclarationSyntax)] = ElementKind.Interface,
+        [typeof(RecordDeclarationSyntax)] = ElementKind.Record,
+        [typeof(EnumDeclarationSyntax)] = ElementKind.Enum,
+
+        // Members
+        [typeof(MethodDeclarationSyntax)] = ElementKind.Callable,
+        [typeof(ConstructorDeclarationSyntax)] = ElementKind.Callable,
+        [typeof(DestructorDeclarationSyntax)] = ElementKind.Callable,
+        [typeof(PropertyDeclarationSyntax)] = ElementKind.Property,
+        [typeof(IndexerDeclarationSyntax)] = ElementKind.Indexer,
+        [typeof(FieldDeclarationSyntax)] = ElementKind.Field,
+        [typeof(EventDeclarationSyntax)] = ElementKind.Event,
+        [typeof(DelegateDeclarationSyntax)] = ElementKind.Delegate,
+
+        // Parameters and variables
+        [typeof(ParameterListSyntax)] = ElementKind.ParameterList,
+        [typeof(ParameterSyntax)] = ElementKind.Parameter,
+        [typeof(VariableDeclarationSyntax)] = ElementKind.VariableDeclaration,
+        [typeof(VariableDeclaratorSyntax)] = ElementKind.VariableDeclarator,
+
+        // Types
+        [typeof(PredefinedTypeSyntax)] = ElementKind.PredefinedType,
+        [typeof(IdentifierNameSyntax)] = ElementKind.Identifier,
+        [typeof(GenericNameSyntax)] = ElementKind.GenericName,
+        [typeof(QualifiedNameSyntax)] = ElementKind.QualifiedName,
+        [typeof(ArrayTypeSyntax)] = ElementKind.ArrayType,
+        [typeof(NullableTypeSyntax)] = ElementKind.NullableType,
+
+        // Statements
+        [typeof(BlockSyntax)] = ElementKind.Block,
+        [typeof(LocalDeclarationStatementSyntax)] = ElementKind.LocalDeclaration,
+        [typeof(ExpressionStatementSyntax)] = ElementKind.ExpressionStatement,
+        [typeof(ReturnStatementSyntax)] = ElementKind.Return,
+        [typeof(ThrowStatementSyntax)] = ElementKind.Throw,
+        [typeof(BreakStatementSyntax)] = ElementKind.Break,
+        [typeof(ContinueStatementSyntax)] = ElementKind.Continue,
+        [typeof(IfStatementSyntax)] = ElementKind.If,
+        [typeof(ElseClauseSyntax)] = ElementKind.Else,
+        [typeof(ForStatementSyntax)] = ElementKind.For,
+        [typeof(ForEachStatementSyntax)] = ElementKind.ForEach,
+        [typeof(WhileStatementSyntax)] = ElementKind.While,
+        [typeof(DoStatementSyntax)] = ElementKind.DoWhile,
+        [typeof(SwitchStatementSyntax)] = ElementKind.Switch,
+        [typeof(SwitchSectionSyntax)] = ElementKind.SwitchSection,
+        [typeof(TryStatementSyntax)] = ElementKind.Try,
+        [typeof(CatchClauseSyntax)] = ElementKind.Catch,
+        [typeof(FinallyClauseSyntax)] = ElementKind.Finally,
+
+        // Expressions
+        [typeof(InvocationExpressionSyntax)] = ElementKind.Invocation,
+        [typeof(MemberAccessExpressionSyntax)] = ElementKind.MemberAccess,
+        [typeof(ArgumentListSyntax)] = ElementKind.ArgumentList,
+        [typeof(ArgumentSyntax)] = ElementKind.Argument,
+        [typeof(LiteralExpressionSyntax)] = ElementKind.Literal,
+        [typeof(AssignmentExpressionSyntax)] = ElementKind.Assignment,
+        [typeof(BinaryExpressionSyntax)] = ElementKind.BinaryExpression,
+        [typeof(PrefixUnaryExpressionSyntax)] = ElementKind.PrefixUnaryExpression,
+        [typeof(PostfixUnaryExpressionSyntax)] = ElementKind.PostfixUnaryExpression,
+        [typeof(ConditionalExpressionSyntax)] = ElementKind.ConditionalExpression,
+        [typeof(ObjectCreationExpressionSyntax)] = ElementKind.ObjectCreation,
+        [typeof(ImplicitObjectCreationExpressionSyntax)] = ElementKind.ImplicitObjectCreation,
+        [typeof(ElementAccessExpressionSyntax)] = ElementKind.ElementAccess,
+        [typeof(ParenthesizedExpressionSyntax)] = ElementKind.ParenthesizedExpression,
+        [typeof(CastExpressionSyntax)] = ElementKind.Cast,
+        [typeof(AwaitExpressionSyntax)] = ElementKind.Await,
+        [typeof(ConditionalAccessExpressionSyntax)] = ElementKind.ConditionalAccess,
+        [typeof(AnonymousMethodExpressionSyntax)] = ElementKind.AnonymousMethod,
+        [typeof(SimpleLambdaExpressionSyntax)] = ElementKind.Lambda,
+        [typeof(ParenthesizedLambdaExpressionSyntax)] = ElementKind.Lambda,
+        [typeof(InterpolatedStringExpressionSyntax)] = ElementKind.InterpolatedString,
+        [typeof(InterpolatedStringTextSyntax)] = ElementKind.InterpolatedText,
+        [typeof(InterpolationSyntax)] = ElementKind.Interpolation,
+
+        // Initializers and arrays
+        [typeof(InitializerExpressionSyntax)] = ElementKind.Initializer,
+        [typeof(ArrayCreationExpressionSyntax)] = ElementKind.ArrayCreation,
+        [typeof(ImplicitArrayCreationExpressionSyntax)] = ElementKind.ImplicitArrayCreation,
+
+        // Other
+        [typeof(ArrowExpressionClauseSyntax)] = ElementKind.ArrowExpression,
+        [typeof(EqualsValueClauseSyntax)] = ElementKind.EqualsValue,
+        [typeof(AttributeSyntax)] = ElementKind.Attribute,
+        [typeof(AttributeListSyntax)] = ElementKind.AttributeList,
     };
+
+    private static readonly ElementTranslator _elementKindToParsedElementTranslator = new();
+
     public CSharpParser(string filepath)
     {
         _filepath = filepath;
@@ -51,7 +136,7 @@ public class CSharpParser : IParser
             }
             ParsedElement element = ParseNode(node);
             parsedElements.Add(element);
-            skipNodes += CountChildElementsRecursive(element);
+            skipNodes += CountChildElementsRecursive(node);
         }
 
         ShowParsedElements(tree, root, parsedElements);
@@ -62,9 +147,7 @@ public class CSharpParser : IParser
     {
         foreach(var node in root.DescendantNodes())
         {
-            Console.WriteLine($"Node: {node.GetType().Name}");
-            Console.WriteLine($"Text: {node.ToFullString()}");
-            Console.WriteLine($"{node.ChildNodes().Count()} children");
+            Console.WriteLine($"Node: {node.GetType().Name}, Text: {node.ToFullString()}");
         }
 
         Console.WriteLine("=== SYNTAX TREE ===");
@@ -108,52 +191,35 @@ public class CSharpParser : IParser
     }
     public void PrintElementTreeRecursive(ParsedElement element, int depth = 0)
     {
-        
-        Console.WriteLine($"{new string(' ', depth * 2)}Element: {element.Kind}, Name: {element.Name}, Type: {element.Type}, Operator: {element.Operator}, Children: {element.Children.Count}");
+        element.PrintInformation(depth);
         foreach (var child in element.Children)
         {
             PrintElementTreeRecursive(child, depth + 1);
         }
+        Console.WriteLine();
     }
     private ParsedElement ParseNode(SyntaxNode node)
-    {
-        var element = new ParsedElement
-        {
-            Kind = Translator.TryGetValue(node.GetType().Name, out var kind) ? kind : ElementKind.Unknown,
-            Name = kind switch
-            {
-                ElementKind.Class => ((ClassDeclarationSyntax)node).Identifier.Text,
-                ElementKind.Method => ((MethodDeclarationSyntax)node).Identifier.Text,
-                ElementKind.Parameter => ((ParameterSyntax)node).Identifier.Text,
-                ElementKind.Identifier => ((IdentifierNameSyntax)node).Identifier.Text,
-                _ => null
-            },
-            Type = kind switch
-            {
-                ElementKind.Method => ((MethodDeclarationSyntax)node).ReturnType.ToString(),
-                ElementKind.Parameter => ((ParameterSyntax)node).Type?.ToString(),
-                _ => null
-            },
-            Operator = kind switch
-            {
-                ElementKind.Invocation => ((InvocationExpressionSyntax)node).Expression.ToString(),
-                _ => null
-            },
-            Text = node.ToFullString()
-        };
+    {   
+        _nodeToElementKindTranslator.TryGetValue(node.GetType(), out var kind);
+        ParsedElement element = _elementKindToParsedElementTranslator.Translate(kind);
 
-        foreach (var child in node.ChildNodes())
+        element.Kind = kind;
+        element.Text = node.ToFullString();
+
+        var children = _ruleSet.Apply(element, node);
+        
+        foreach (var child in children)
         {
             element.Children.Add(ParseNode(child));
         }
 
         return element;
     }
-    
-    private int CountChildElementsRecursive(ParsedElement element)
+
+    private int CountChildElementsRecursive(SyntaxNode node)
     {
-        int count = element.Children.Count;
-        foreach (var child in element.Children)
+        int count = node.ChildNodes().Count();
+        foreach (var child in node.ChildNodes())
         {
             count += CountChildElementsRecursive(child);
         }
@@ -268,4 +334,7 @@ public class CSharpParser : IParser
             PrintTree(child, depth + 1);
         }
     }
+
+
+
 }
