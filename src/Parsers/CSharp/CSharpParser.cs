@@ -43,10 +43,15 @@ public class CSharpParser : IParser
         [typeof(ParameterSyntax)] = ElementKind.Parameter,
         [typeof(VariableDeclarationSyntax)] = ElementKind.VariableDeclaration,
         [typeof(VariableDeclaratorSyntax)] = ElementKind.VariableDeclarator,
+        [typeof(DeclarationPatternSyntax)] = ElementKind.VariableDeclaration,
+        [typeof(ConstantPatternSyntax)] = ElementKind.ConstantDeclaration,
+        [typeof(BaseListSyntax)] = ElementKind.InheritanceList,
+        [typeof(SimpleBaseTypeSyntax)] = ElementKind.InheritedType,
 
         // Types
         [typeof(PredefinedTypeSyntax)] = ElementKind.PredefinedType,
         [typeof(IdentifierNameSyntax)] = ElementKind.Identifier,
+        [typeof(SingleVariableDesignationSyntax)] = ElementKind.Identifier,
         [typeof(GenericNameSyntax)] = ElementKind.GenericName,
         [typeof(QualifiedNameSyntax)] = ElementKind.QualifiedName,
         [typeof(ArrayTypeSyntax)] = ElementKind.ArrayType,
@@ -77,11 +82,13 @@ public class CSharpParser : IParser
         [typeof(MemberAccessExpressionSyntax)] = ElementKind.MemberAccess,
         [typeof(ArgumentListSyntax)] = ElementKind.ArgumentList,
         [typeof(ArgumentSyntax)] = ElementKind.Argument,
+        [typeof(TypeArgumentListSyntax)] = ElementKind.TypeArgumentList,
         [typeof(LiteralExpressionSyntax)] = ElementKind.Literal,
         [typeof(AssignmentExpressionSyntax)] = ElementKind.Assignment,
         [typeof(BinaryExpressionSyntax)] = ElementKind.BinaryExpression,
         [typeof(PrefixUnaryExpressionSyntax)] = ElementKind.PrefixUnaryExpression,
         [typeof(PostfixUnaryExpressionSyntax)] = ElementKind.PostfixUnaryExpression,
+        [typeof(UnaryPatternSyntax)] = ElementKind.UnaryExpression,
         [typeof(ConditionalExpressionSyntax)] = ElementKind.ConditionalExpression,
         [typeof(ObjectCreationExpressionSyntax)] = ElementKind.ObjectCreation,
         [typeof(ImplicitObjectCreationExpressionSyntax)] = ElementKind.ImplicitObjectCreation,
@@ -96,6 +103,7 @@ public class CSharpParser : IParser
         [typeof(InterpolatedStringExpressionSyntax)] = ElementKind.InterpolatedString,
         [typeof(InterpolatedStringTextSyntax)] = ElementKind.InterpolatedText,
         [typeof(InterpolationSyntax)] = ElementKind.Interpolation,
+        [typeof(IsPatternExpressionSyntax)] = ElementKind.IsExpression,
 
         // Initializers and arrays
         [typeof(InitializerExpressionSyntax)] = ElementKind.Initializer,
@@ -196,7 +204,6 @@ public class CSharpParser : IParser
         {
             PrintElementTreeRecursive(child, depth + 1);
         }
-        Console.WriteLine();
     }
     private ParsedElement ParseNode(SyntaxNode node)
     {   
@@ -327,7 +334,7 @@ public class CSharpParser : IParser
             : $" [{details}]";
 
         Console.WriteLine(
-            $"{new string(' ', depth * 2)}{node.Kind()}{suffix}");
+            $"{new string(' ', depth * 2)}{node.GetType().FullName}{suffix}");
 
         foreach (SyntaxNode child in node.ChildNodes())
         {

@@ -3,6 +3,7 @@ namespace Parsers.Roslyn;
 using Microsoft.CodeAnalysis;
 using Parsers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Reflection.Metadata;
 
 public class UnknownElementRule : Rule<UnknownElement, SyntaxNode>
 {
@@ -11,29 +12,9 @@ public class UnknownElementRule : Rule<UnknownElement, SyntaxNode>
         SyntaxNode syntaxNode,
         List<SyntaxNode>? children)
     {
-        if (children is null)
-            return;
+        if (children is null) return;
 
-        switch (syntaxNode)
-        {
-            case ExpressionStatementSyntax expressionStatement:
-                children.Add(expressionStatement.Expression);
-                break;
-
-            case ArgumentListSyntax argumentList:
-                children.AddRange(argumentList.Arguments);
-                break;
-
-            case ParameterListSyntax parameterList:
-                children.AddRange(parameterList.Parameters);
-                break;
-
-            case BlockSyntax block:
-                children.AddRange(block.Statements);
-                break;
-
-            // Other UnknownElement nodes remain leaves.
-        }
+        children.AddRange(syntaxNode.ChildNodes());
     }
 }
 
@@ -45,15 +26,16 @@ public class ImportElementRule : Rule<ImportElement, SyntaxNode>
         List<SyntaxNode>? children)
     {
         // Roslyn uses UsingDirectiveSyntax for import nodes
-        // UsingDirectiveSyntax has 1 IdentifierNameSyntax child node
         // This node contains the namespace's name
 
         if (syntaxNode is not UsingDirectiveSyntax usingSyntax)
             return;
 
         element.KeyWord = "using";
-        element.Package = usingSyntax.Name?.ToString() ?? string.Empty;
 
+        if (children is null)
+            return;
+        children.AddRange(usingSyntax.ChildNodes());
     }
 
 }
@@ -73,7 +55,7 @@ public class ClassElementRule : Rule<ClassElement, SyntaxNode>
         if (children is null)
             return;
 
-        children.AddRange(classSyntax.Members);
+        children.AddRange(classSyntax.ChildNodes());
     }
 }
 
@@ -115,11 +97,14 @@ public class IdentifierElementRule : Rule<IdentifierElement, SyntaxNode>
         SyntaxNode syntaxNode,
         List<SyntaxNode>? children)
     {
-        if (syntaxNode is not IdentifierNameSyntax identifierSyntax)
-            return;
-
-        element.Name = identifierSyntax.Identifier.ValueText;
-    }
+        if (syntaxNode is IdentifierNameSyntax identifierSyntax)
+            element.Name = identifierSyntax.Identifier.ValueText; 
+        
+        if (syntaxNode is SingleVariableDesignationSyntax singleVariableDesignationSyntax)
+            element.Name = singleVariableDesignationSyntax.Identifier.ValueText;
+        
+    } 
+        
 }
 
 public class InvocationElementRule
@@ -188,5 +173,87 @@ public class LiteralElementRule : Rule<LiteralElement, SyntaxNode>
             return;
 
         element.Value = literalSyntax.Token.ValueText;
+
+        if (children is null)
+            return;
+
+        children.AddRange(literalSyntax.ChildNodes());
+    }
+}
+
+public class ParameterElementRule : Rule<ParameterElement, SyntaxNode>
+{
+    public override void ApplyRule(
+        ParameterElement element,
+        SyntaxNode syntaxNode,
+        List<SyntaxNode>? children)
+    {
+        if (syntaxNode is not ParameterSyntax parameterSyntax)
+            return;
+
+        element.Name = parameterSyntax.Identifier.ValueText;
+        element.Type = parameterSyntax.Type is not null ? parameterSyntax.Type.ToString() : "";
+        element.IsNullable = parameterSyntax.Type is NullableTypeSyntax;
+
+        if (children is null)
+            return;
+
+        children.AddRange(parameterSyntax.ChildNodes());
+    }
+}
+
+public class IsExpressionElementRule : Rule<IsExpressionElement, SyntaxNode>
+{
+    public override void ApplyRule(
+        IsExpressionElement element,
+        SyntaxNode syntaxNode,
+        List<SyntaxNode>? children)
+    {
+        if (syntaxNode is not IsPatternExpressionSyntax isExpressionSyntax)
+            return;
+
+        element.Pattern = isExpressionSyntax.Pattern.ToString();
+
+        if (children is null)
+            return;
+            
+        children.AddRange(isExpressionSyntax.ChildNodes());
+    }
+}
+
+public class ConstantElementRule : Rule<ConstantElement, SyntaxNode>
+{
+    public override void ApplyRule(
+        ConstantElement element,
+        SyntaxNode syntaxNode,
+        List<SyntaxNode>? children)
+    {
+        if (syntaxNode is not ConstantPatternSyntax constantPatternSyntax)
+            return;
+
+
+        if (children is null)
+            return;
+        
+        children.Add(constantPatternSyntax.Expression);
+    }
+}
+
+public class UnaryExpressionElementRule() : Rule<UnaryExpressionElement, SyntaxNode>
+{
+    public override void ApplyRule(
+        UnaryExpressionElement element, 
+        SyntaxNode syntaxNode, 
+        List<SyntaxNode>? children)
+    {
+        if (syntaxNode is not UnaryPatternSyntax unaryPatternSyntax)
+            return;
+
+        element.Operator = unaryPatternSyntax.OperatorToken.ToString();
+
+        if (children is null)
+            return;
+           
+        children.AddRange(unaryPatternSyntax.ChildNodes());
     }
 }

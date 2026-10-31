@@ -39,12 +39,29 @@ public class CallableElement : DeclarationElement
     }
 }
 
+public class ParameterElementList : ParsedElement
+{}
+
 public class ParameterElement : DeclarationElement
 {
     public string Type { get; set; } = string.Empty;
-
+    public bool IsNullable { get; set; } = false;
     protected override void PrintDeclarationInformation(string indent)
     {
-        Console.WriteLine($"{indent}Type: {Type}");
+        Console.WriteLine($"{indent}Type/Class: {Type}, Nullable: {IsNullable}");
     }
 }
+
+public class InheritanceListElement : ParsedElement
+{
+}
+
+public class InheritedTypeElement : ParsedElement
+{
+}
+
+public class NamespaceElement : DeclarationElement
+{}
+
+public class ConstantElement: DeclarationElement
+{}

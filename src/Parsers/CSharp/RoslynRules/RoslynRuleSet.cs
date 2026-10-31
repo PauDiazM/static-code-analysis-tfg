@@ -16,5 +16,23 @@ public class RoslynRuleSet : RuleSet<SyntaxNode>
         Rules[typeof(MemberAccessElement)] = new MemberAccessElementRule();
         Rules[typeof(ArgumentElement)] = new ArgumentElementRule();
         Rules[typeof(LiteralElement)] = new LiteralElementRule();
+        Rules[typeof(ParameterElement)] = new ParameterElementRule();
+        Rules[typeof(IsExpressionElement)] = new IsExpressionElementRule();
+        Rules[typeof(ConstantElement)] = new ConstantElementRule();
+        Rules[typeof(UnaryExpressionElement)] = new UnaryExpressionElementRule();
+    }
+
+    public override List<SyntaxNode> Apply(ParsedElement element, SyntaxNode syntaxNode)
+    {
+        List<SyntaxNode> children = new();
+        if (Rules.TryGetValue(element.GetType(), out var rule))
+        {
+            rule.ApplyRule(element, syntaxNode, children);
+        } else
+        {
+            children.AddRange(syntaxNode.ChildNodes());
+        }
+
+        return children;
     }
 }

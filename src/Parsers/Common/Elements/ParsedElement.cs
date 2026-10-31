@@ -16,7 +16,8 @@ public abstract class ParsedElement
 
         PrintSpecificInformation(indent);
 
-        Console.WriteLine($"{indent}Text: {Text}");
+        //Console.WriteLine($"{indent}Text: {Text}");
+        Console.WriteLine($"{indent}{new('-', 40)}");
     }
 
     protected virtual void PrintSpecificInformation(string indent){}
@@ -26,14 +27,19 @@ public abstract class ParsedElement
 public class ImportElement : ParsedElement
 {
     public string KeyWord { get; set; } = string.Empty;
-    public string Package { get; set; } = string.Empty;
     protected override void PrintSpecificInformation(string indent)
     {
-       Console.WriteLine($"{indent}Keyword: {KeyWord}, Package: {Package}");
+       Console.WriteLine($"{indent}Keyword: {KeyWord}");
     }
 }
 
+public class ArgumentElementList : ParsedElement
+{}
 public class ArgumentElement : ParsedElement
+{
+}
+
+public class TypeArgumentListElement : ParsedElement
 {
 }
 
@@ -43,4 +49,8 @@ public class UnknownElement : ParsedElement
     {
         Kind = kind;
     }
+}
+
+public class BlockElement : ParsedElement
+{
 }

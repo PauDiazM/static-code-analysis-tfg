@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Parsers;
 
 public class ElementTranslator : IElementTranslator
@@ -16,6 +17,15 @@ public class ElementTranslator : IElementTranslator
             ElementKind.Literal => new LiteralElement(),
             ElementKind.Parameter => new ParameterElement(),
             ElementKind.Argument => new ArgumentElement(),
+            ElementKind.ArgumentList => new ArgumentElementList(),
+            ElementKind.ParameterList => new ParameterElementList(),
+            ElementKind.Block => new BlockElement(),
+            ElementKind.Namespace => new NamespaceElement(),
+            ElementKind.UnaryExpression => new UnaryExpressionElement(),
+            ElementKind.TypeArgumentList => new TypeArgumentListElement(),
+            ElementKind.InheritanceList => new InheritanceListElement(),
+            ElementKind.InheritedType => new InheritedTypeElement(),
+
             _ => new UnknownElement(kind)
         };
     }
