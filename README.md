@@ -14,6 +14,12 @@ The tool is intended to support the analysis of different programming languages 
 
 The architecture and supported programming languages are currently being defined.
 
+## Parser Output
+
+Parsers expose a shared `ParseResult` containing a `ParsedElement` tree and normalized parse diagnostics. Parser-specific libraries are used only inside their parser implementations; downstream analysis should consume the shared model rather than syntax nodes from a particular parser.
+
+The C# parser uses Roslyn internally and maps its syntax tree to the common model. The console application currently prints that model as a development aid.
+
 ## Repository Structure
 
 ```text
