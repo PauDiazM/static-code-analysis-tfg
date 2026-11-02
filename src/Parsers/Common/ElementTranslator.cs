@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Parsers;
 
 public class ElementTranslator : IElementTranslator
@@ -8,25 +7,18 @@ public class ElementTranslator : IElementTranslator
         return kind switch
         {
             ElementKind.Import => new ImportElement(),
-            ElementKind.Class => new ClassElement(),
-            ElementKind.Interface => new ContractElement(),
+            ElementKind.Class or ElementKind.Struct or ElementKind.Template
+                or ElementKind.Interface or ElementKind.Record or ElementKind.Enum
+                or ElementKind.Namespace => new DeclarationElement(kind),
             ElementKind.Callable => new CallableElement(),
-            ElementKind.Invocation => new InvocationElement(),
-            ElementKind.BinaryExpression => new BinaryExpressionElement(),
+            ElementKind.Parameter => new ParameterElement(),
             ElementKind.Identifier => new IdentifierElement(),
             ElementKind.Literal => new LiteralElement(),
-            ElementKind.Parameter => new ParameterElement(),
-            ElementKind.Argument => new ArgumentElement(),
-            ElementKind.ArgumentList => new ArgumentElementList(),
-            ElementKind.ParameterList => new ParameterElementList(),
-            ElementKind.Block => new BlockElement(),
-            ElementKind.Namespace => new NamespaceElement(),
-            ElementKind.UnaryExpression => new UnaryExpressionElement(),
-            ElementKind.TypeArgumentList => new TypeArgumentListElement(),
-            ElementKind.InheritanceList => new InheritanceListElement(),
-            ElementKind.InheritedType => new InheritedTypeElement(),
-
-            _ => new UnknownElement(kind)
+            ElementKind.BinaryExpression or ElementKind.PrefixUnaryExpression
+                or ElementKind.PostfixUnaryExpression or ElementKind.UnaryExpression
+                or ElementKind.Assignment => new OperatorElement(kind),
+            ElementKind.IsExpression => new IsExpressionElement(),
+            _ => new ParsedElement(kind)
         };
     }
 }

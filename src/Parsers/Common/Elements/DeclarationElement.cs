@@ -1,6 +1,6 @@
 namespace Parsers;
 
-public abstract class DeclarationElement(ElementKind kind) : ParsedElement(kind)
+public class DeclarationElement(ElementKind kind) : ParsedElement(kind)
 {
     public string Name { get; set; } = string.Empty;
 }
