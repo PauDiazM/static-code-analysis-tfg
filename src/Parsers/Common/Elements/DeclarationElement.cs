@@ -1,67 +1,24 @@
-using Parsers;
+namespace Parsers;
 
-public enum ContractKind
-{
-    Interface,
-    Template
-}
-public abstract class DeclarationElement : ParsedElement
+public abstract class DeclarationElement(ElementKind kind) : ParsedElement(kind)
 {
     public string Name { get; set; } = string.Empty;
-    protected override void PrintSpecificInformation(string indent)
-    {
-        Console.WriteLine($"{indent}Name: {Name}");
-        PrintDeclarationInformation(indent);
-    }
-
-    protected virtual void PrintDeclarationInformation(string indent){}
-
 }
 
-public class ClassElement : DeclarationElement
-{
-}
-
-public class ContractElement : DeclarationElement
-{
-}
-
-public class CallableElement : DeclarationElement
+public class CallableElement() : DeclarationElement(ElementKind.Callable)
 {
     public List<string> Modifiers { get; set; } = new();
-
     public string? ReturnType { get; set; }
-
-    protected override void PrintDeclarationInformation(string indent)
-    {
-        Console.WriteLine($"{indent}Modifiers: {string.Join(" ", Modifiers)}");
-        Console.WriteLine($"{indent}Return type: {ReturnType}");
-    }
 }
 
-public class ParameterElementList : ParsedElement
-{}
-
-public class ParameterElement : DeclarationElement
+public class ParameterElement() : DeclarationElement(ElementKind.Parameter)
 {
     public string Type { get; set; } = string.Empty;
-    public bool IsNullable { get; set; } = false;
-    protected override void PrintDeclarationInformation(string indent)
-    {
-        Console.WriteLine($"{indent}Type/Class: {Type}, Nullable: {IsNullable}");
-    }
+    public bool IsNullable { get; set; }
 }
 
-public class InheritanceListElement : ParsedElement
+public class ImportElement() : ParsedElement(ElementKind.Import)
 {
+    public string ImportedName { get; set; } = string.Empty;
+    public string? Alias { get; set; }
 }
-
-public class InheritedTypeElement : ParsedElement
-{
-}
-
-public class NamespaceElement : DeclarationElement
-{}
-
-public class ConstantElement: DeclarationElement
-{}
