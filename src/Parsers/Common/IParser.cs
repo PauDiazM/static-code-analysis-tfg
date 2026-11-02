@@ -2,5 +2,5 @@ namespace Parsers;
 
 public interface IParser
 {
-    void Parse();
+    ParseResult Parse();
 }
