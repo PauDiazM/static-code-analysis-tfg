@@ -34,6 +34,8 @@ public enum ElementKind
     GenericName,
     QualifiedName,
     ArrayType,
+    ArrayDimensionList,
+    ArrayDimension,
     NullableType,
 
     Block,

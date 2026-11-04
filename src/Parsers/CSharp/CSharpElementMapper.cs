@@ -40,6 +40,8 @@ internal sealed class CSharpElementMapper
         [typeof(GenericNameSyntax)] = ElementKind.GenericName,
         [typeof(QualifiedNameSyntax)] = ElementKind.QualifiedName,
         [typeof(ArrayTypeSyntax)] = ElementKind.ArrayType,
+        [typeof(ArrayRankSpecifierSyntax)] = ElementKind.ArrayDimensionList,
+        [typeof(OmittedArraySizeExpressionSyntax)] = ElementKind.ArrayDimension,
         [typeof(NullableTypeSyntax)] = ElementKind.NullableType,
         [typeof(BlockSyntax)] = ElementKind.Block,
         [typeof(LocalDeclarationStatementSyntax)] = ElementKind.LocalDeclaration,
