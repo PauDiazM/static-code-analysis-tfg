@@ -1,0 +1,55 @@
+\documentclass[a4paper,12pt]{report}
+
+
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage[catalan]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[
+    backend=biber,
+    style=numeric
+]{biblatex}
+\usepackage{tabularx}
+\usepackage{float}
+
+\addbibresource{bibliography.bib}
+\newenvironment{objectius}{
+    \begin{tcolorbox}[
+        breakable,
+        colback=gray!10,
+        colframe=gray!50,
+        boxrule=0.5pt,
+        arc=3pt
+    ]
+}{
+    \end{tcolorbox}
+}
+\newcommand{\objectiu}[2]{
+    \begin{tcolorbox}[
+        breakable,
+        colback=gray!25,
+        colframe=gray!25,
+        boxrule=0pt,
+        arc=2pt
+    ]
+        \textbf{Objectiu}
+        #1
+        \vspace{0.5em}
+
+        \textbf{Justificació}
+        #2
+    \end{tcolorbox}
+
+    \vspace{0.5em}
+}
+
+\begin{document}
+
+\input{sections/project-title}
+\input{sections/body}
+\input{sections/progress.tex}
+\input{sections/ai-use.tex}
+\input{sections/bibliography.tex}
+
+\end{document}

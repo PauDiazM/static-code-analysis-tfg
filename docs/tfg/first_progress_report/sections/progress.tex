@@ -1,0 +1,21 @@
+\section*{Progrés del projecte}
+\subsection*{Revisió de l'informe inicial}
+
+En primer lloc, s'han revisat els objectius del projecte respecte a l'informe inicial. S'ha modificat alguns d'ells per a fer-los més concrets i precisos, així com per a definir millor la feina a realitzar i els mètodes d'avaluació dels resultats. A més a més, s'ha canviat l'ordre dels objectius per a agriupar-los segons la seva relació amb les diferents fases del projecte. Finalment, s'ha afegit un objectiu addicional relacionat amb l'avaluació de l'eina desenvolupada.
+
+En segon lloc, s'ha revisat l'arquitectura general de l'eina proposada. S'han fet alguns canvis per a millorar la claredat i la comprensió de l'esquema, així com per a reflectir millor les decisions preses fins al moment.
+
+Seguidament, s'ha revisat la planificació temporal del projecte. S'han fet alguns ajustos per a reflectir millor les tasques realitzades fins al moment i les que queden per fer. Per exemple, durant la fase de desenvolupament de l'eina, s'ha vist que la part de generació de la representació intermèdia de codi és més complexa del que s'havia previst, per la qual cosa s'ha decidit dedicar més temps a aquesta tasca i ajustar la planificació en conseqüència. Per a dur a terme aquest ajust, s'ha disminuït la previsió de temps dedicat a la fase d'implementació dels mètodes d'anàlisi de codi. Aquesta decisió s'ha pres tenint en compte que l'objectiu principal del projecte és desenvolupar una eina que permeti generar una representació intermèdia de codi i que sigui capaç d'analitzar-lo, per la qual cosa es considera més important dedicar més temps a la generació de la representació que a l'implementació dels mètodes d'anàlisi, els quals seran mètodes tradicionals.
+Tot i això, aquests ajustos no haurien d'afectar al resultat final del projecte i s'haurien de poder completar totes les tasques previstes dins del termini establert.
+
+\subsection*{Desenvolupament del codi}
+
+Aquest apartat és on s'hi ha dedicat la major part del temps fins al moment. S'ha començat a desenvolupar l'eina, creant l'estructura bàsica del projecte. Actualment l'eina és capaç d'executar Roslyn sobre un fitxer de codi font i, a partir de la sortida generada, crear una estructura de dades representativa del codi font i independent de l'idioma de programació. Aquesta estructura però, encara no és la IR del codi, sino una sortida intermèdia que preten separar el mòdul de parsing del mòdul encarregat de crear la representació intermèdia final. 
+
+Els següents passos seran acabar d'establir les normes d'aquesta sortida comuna del mòdul de parsing i començar a desenvolupar el mòdul encarregat de crear la representació intermèdia final a partir d'aquesta sortida. Un cop s'hagi aconseguit generar la representació intermèdia de codi, es podrà començar a implementar els mètodes d'anàlisi de codi.
+
+\subsection*{Estructura del projecte}
+
+L'estructura actual del projecte sorgeix de l'esquema inicial de l'arquitectura general de l'eina de la primera entrega, amb algunes modificacions. Aquestes modificacions han anat sorgint durant el desenvolupament del codi i han estat motivades per la necessitat de separar millor les diferents parts del projecte i fer-les més independents entre elles. Actualment, el projecte només conté el mòdul de parsing, que és el que s'ha desenvolupat fins al moment. Dintre d'aquest mòdul, s'han creat diferents classes i interfícies necessàries per a llegir la sortida del parser (de moment només Roslyn) i crear una estructura de dades representativa del codi font. És a dir, s'ha creat una estructura que permet deixar de banda les classes pròpies que implementa Roslyn per unes generals que puguin adaptar-se a diferents llenguatges de programació.
+
+Entrant més en detall, tot comença amb la classe ParserFactory, que és la classe encarregada d'instanciar el parser corresponent. Actualment la tria és trivial ja que només hi ha un parser implementat, però més endavant, aquesta classe contindrà la lògica per triar el parser corresponent segons el llenguatge del fitxer de codi rebut. 
