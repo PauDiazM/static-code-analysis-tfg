@@ -15,6 +15,12 @@ Tot i aquests ajustos, es considera que no haurien d'afectar el resultat final d
 \subsection*{Desenvolupament del codi}
 
 Aquest és l'apartat al qual s'ha dedicat la major part del temps fins al moment. S'ha començat a desenvolupar l'eina creant l'estructura bàsica del projecte i implementant el primer mòdul de l'arquitectura: el mòdul de parsing.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/parser_module.png}
+    \caption{Esquema del mòdul de parsing.}
+    \label{fig:arquitectura}
+\end{figure}
 
 Actualment, l'eina és capaç d'executar Roslyn sobre un fitxer de codi font i, a partir de l'arbre sintàctic generat, construir una estructura de dades que representa els elements del codi font sense dependre directament de les classes pròpies de Roslyn. Aquesta estructura, però, encara no constitueix la representació intermèdia (IR) final del codi, sinó que és una sortida intermèdia que té com a objectiu desacoblar el mòdul de parsing del mòdul encarregat de generar la representació intermèdia definitiva.
 
