@@ -56,21 +56,21 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 % =========================================================
 
 \objectiu{
- Dissenyar una arquitectura modular i extensible per a una eina d'anàlisi estàtica de software.
+    Dissenyar i implementar una arquitectura modular que desacobli els parsers dels components d'anàlisi estàtica.
 }{
- Aquesta arquitectura permetrà desacoblar el processament específic de cada llenguatge dels mecanismes de construcció de grafs i anàlisi estàtica, facilitant la incorporació de nous llenguatges i la reutilització dels components comuns.
+    L'arquitectura haurà de permetre separar el processament específic de cada llenguatge de programació dels mecanismes comuns de construcció de grafs i anàlisi estàtica. Es considerarà assolit aquest objectiu quan els components principals del sistema estiguin organitzats en mòduls independents i es puguin utilitzar mitjançant interfícies ben definides, sense dependre directament de les implementacions específiques dels parsers.
 }
 
 \objectiu{
- Desenvolupar una representació intermèdia capaç de modelar conceptes comuns de diferents llenguatges de programació.
+    Desenvolupar una representació intermèdia capaç de modelar els elements estructurals i les relacions necessàries per a l'anàlisi estàtica de diferents llenguatges de programació.
 }{
- Es definirà una representació intermèdia que permeti abstraure les característiques compartides entre diferents llenguatges, preservant la informació rellevant per a l'anàlisi estàtica. Es prioritzaran inicialment llenguatges amb característiques similars, com C\#, C++ o Java, i posteriorment es podrà estudiar la seva generalització a llenguatges amb característiques diferents, com Python.
+    Es definirà una representació intermèdia que permeti abstraure les característiques compartides entre diferents llenguatges, preservant la informació necessària per a la construcció dels grafs de dependències i de flux de control. Es prioritzaran llenguatges amb característiques similars, com C\#, C++ o Java, estudiant posteriorment la possibilitat d'estendre aquesta representació a llenguatges amb característiques diferents, com Python. Es considerarà assolit l'objectiu quan la representació permeti modelar el subconjunt de construccions definit per als llenguatges implementats.
 }
 
 \objectiu{
- Avaluar la capacitat de l'arquitectura per desacoblar els parsers dels components d'anàlisi i facilitar-ne la reutilització.
+    Avaluar el grau de desacoblament i reutilització dels components de l'arquitectura mitjançant la incorporació de diferents parsers.
 }{
- Es comprovarà que diferents parsers poden utilitzar una mateixa representació intermèdia i els mateixos components de construcció de grafs i anàlisi, sense necessitat de modificar-ne la implementació. També s'avaluarà l'esforç necessari per incorporar nous llenguatges, tenint en compte el codi afegit, els components reutilitzats i les modificacions requerides sobre l'arquitectura existent.
+    Es comprovarà que diferents parsers poden generar una mateixa representació intermèdia i utilitzar els components comuns de construcció de grafs i anàlisi sense necessitat de modificar-ne la implementació. També s'estudiarà l'esforç necessari per incorporar un nou parser, considerant el nombre de components reutilitzats, les modificacions requerides sobre els components existents i la quantitat de codi específic desenvolupat per al nou llenguatge.
 }
 
 
@@ -79,27 +79,27 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 % =========================================================
 
 \objectiu{
- Implementar una primera versió de l'eina mitjançant un parser de C\#.
+    Implementar un parser de C\# capaç de generar la representació intermèdia dels principals elements estructurals del llenguatge.
 }{
- C\# ofereix un sistema de tipus estàtic i un model orientat a objectes que faciliten el desenvolupament d'una arquitectura modular i extensible. A més, l'ecosistema .NET proporciona eines madures per al desenvolupament i testing de l'eina.
+    El parser haurà de permetre processar un conjunt definit de construccions de C\#, incloent-hi espais de noms, classes, interfícies, mètodes, atributs, invocacions i expressions rellevants per a l'anàlisi estàtica. També haurà de gestionar les construccions de control necessàries per a la generació dels grafs de flux de control. Es considerarà assolit l'objectiu quan els elements seleccionats es puguin processar i representar mitjançant l'estructura intermèdia definida.
 }
 
 \objectiu{
- Desenvolupar mecanismes de construcció de grafs de dependències i fluxos de control.
+    Desenvolupar mecanismes de construcció de grafs de dependències i de flux de control a partir de la representació intermèdia.
 }{
- Aquests mecanismes permetran representar les relacions entre els diferents elements del programa, així com les possibles seqüències d'execució dins dels mètodes. Els grafs generats serviran com a base per implementar diferents funcionalitats d'anàlisi estàtica.
+    Els grafs de dependències permetran representar les relacions estructurals entre els diferents elements del programa, com ara les dependències entre classes, mètodes i membres. D'altra banda, els grafs de flux de control representaran les possibles seqüències d'execució dins dels mètodes, incloent-hi les estructures condicionals i iteratives. Es considerarà assolit l'objectiu quan es puguin generar ambdós tipus de grafs per als casos de prova definits.
 }
 
 \objectiu{
- Implementar funcionalitats d'anàlisi estàtica sobre els grafs generats.
+    Implementar funcionalitats bàsiques d'anàlisi estàtica a partir dels grafs generats.
 }{
- Es desenvoluparan funcionalitats que permetin analitzar les dependències entre els diferents components del programa, identificant el grau d'acoblament, possibles dependències circulars o innecessàries i l'impacte potencial de les modificacions. També s'analitzaran els fluxos de control per identificar possibles punts o camins crítics.
+    Es desenvoluparan diferents funcionalitats que permetin obtenir informació sobre l'estructura i les relacions entre els elements del programa. Entre aquestes s'inclouran la detecció de dependències circulars, l'anàlisi del grau d'acoblament i la identificació de dependències directes i indirectes. També s'exploraran possibilitats d'anàlisi bàsica dels grafs de flux de control, com ara la identificació de bifurcacions i camins dins dels mètodes.
 }
 
 \objectiu{
- Representar visualment els resultats mitjançant grafs.
+    Desenvolupar un mecanisme de visualització dels grafs generats per facilitar l'anàlisi de l'estructura dels programes.
 }{
- Aquesta representació permetrà als usuaris analitzar i comprendre de manera senzilla els resultats obtinguts per l'eina, així com identificar visualment possibles problemes o oportunitats de millora en el software.
+    La visualització haurà de permetre representar els grafs de dependències i de flux de control generats per l'eina, facilitant la identificació de les relacions entre els diferents elements del programa i la comprensió de les seves possibles seqüències d'execució. Es considerarà assolit l'objectiu quan els grafs generats es puguin consultar visualment i distingir-ne els diferents tipus de nodes i relacions.
 }
 
 
@@ -108,25 +108,27 @@ Per últim, aquesta abstracció permet unificar la representació dels diferents
 % =========================================================
 
 \objectiu{
- Garantir el correcte funcionament de l'eina amb un subconjunt representatiu dels elements dels llenguatges implementats.
+    Validar el correcte funcionament de l'eina mitjançant un conjunt representatiu de casos de prova.
 }{
- Aquest objectiu permet delimitar l'abast del projecte i establir un conjunt concret de funcionalitats sobre les quals avaluar el correcte funcionament de l'eina. Per fer-ho, es definiran diferents casos de prova que cobreixin les construccions dels llenguatges implementades, incloent-hi variants i situacions que puguin presentar dificultats durant el processament.
+    Es definirà un conjunt de casos de prova que cobreixi les construccions més habituals del llenguatge implementades, incloent-hi diferents variants i situacions representatives del seu ús. Es prioritzaran els casos d'ús comuns, sense exigir el suport de construccions poc habituals o especialment complexes. Per a cada cas, es disposarà d'una referència amb els resultats esperats, elaborada manualment o contrastada amb eines existents.
 
- Els resultats obtinguts es compararan amb una referència, ja sigui mitjançant resultats verificats manualment o eines existents, utilitzant mètriques com la precisió, el recall i l'F1-score. També s'analitzarà la cobertura dels elements del llenguatge, diferenciant entre aquells que es processen correctament, parcialment o incorrectament.
+    La validació es realitzarà comparant els resultats obtinguts amb les referències establertes, utilitzant mètriques com la precisió, el recall i l'F1-score. També s'avaluarà el grau de cobertura de les construccions seleccionades, diferenciant entre aquelles que es processen correctament, parcialment o incorrectament. Es considerarà satisfactori assolir una precisió i un recall mínims del 85\% sobre els elements avaluats.
 }
 
 \objectiu{
- Avaluar el rendiment i l'escalabilitat de l'eina en projectes de diferents dimensions i complexitats.
+    Avaluar el rendiment i l'escalabilitat de l'eina mitjançant proves sobre projectes de diferents dimensions.
 }{
- Aquest objectiu permetrà estudiar el comportament de l'eina en escenaris pràctics i identificar possibles limitacions. Per avaluar-lo, es definiran diferents casos de prova sobre projectes reals o representatius de diverses dimensions.
+    Es definiran almenys tres escenaris de prova corresponents a projectes de dimensions diferents, seleccionats entre projectes reals o representatius. Per a cada escenari, s'analitzarà el comportament de l'eina durant les diferents etapes del processament, incloent-hi l'anàlisi del codi font, la generació de la representació intermèdia i la construcció dels grafs.
 
- Es mesurarà el rendiment dels diferents components del sistema, com ara el processament del codi font, la construcció de la representació intermèdia i la generació dels grafs. Es tindran en compte mètriques com el temps d'execució, el consum de memòria i la mida de les estructures generades, estudiant-ne l'evolució en funció de la dimensió dels projectes analitzats.
+    Es mesuraran indicadors com el temps d'execució, el consum de memòria i la quantitat de nodes i relacions generades. Els resultats permetran estudiar l'evolució del cost computacional en funció de la dimensió dels projectes i identificar possibles limitacions de rendiment.
 }
 
 \objectiu{
- Analitzar la utilitat de l'eina en la detecció i comprensió de problemes estructurals del software.
+    Avaluar la utilitat de l'eina en tasques de comprensió i anàlisi de l'estructura del software.
 }{
- Aquest objectiu permetrà avaluar la utilitat de l'eina en la detecció i comprensió de problemes estructurals del software, així com en la identificació de punts de millora. Per avaluar-ho, es compararan les tasques d'anàlisi realitzades amb l'eina i sense, observant els problemes detectats i el temps necessari per identificar-los.
+    Es definiran diferents tasques d'anàlisi sobre projectes de prova que es realitzaran utilitzant l'eina i sense utilitzar-la. Es compararan els resultats obtinguts considerant indicadors com el temps necessari per completar cada tasca, la quantitat de problemes estructurals identificats i la capacitat de comprendre les relacions entre els diferents elements del programa.
+
+    Aquesta comparació permetrà estudiar fins a quin punt les funcionalitats de construcció de grafs i visualització faciliten la identificació i comprensió de les característiques estructurals dels projectes analitzats.
 }
 
 \end{objectius}
