@@ -1,3 +1,7 @@
+using System;
+
+namespace CodeSamples;
+
 public class Vehicle
 {
     public string Brand { get; set; }
@@ -16,4 +20,25 @@ public class Vehicle
     {
         Console.WriteLine($"Vehicle: {Year} {Brand} {Model}");
     }
+
+    public static void Main()
+    {
+        Vehicle vehicle = new Vehicle("Volvo", "XC60", 2024);
+        vehicle.DisplayInfo();
+    }
 }
+
+public struct VehicleDimensions
+{
+    public int Length { get; set; }
+    public int Width { get; set; }
+}
+
+public enum VehicleKind
+{
+    Car = 1,
+    Truck = 2,
+    Motorcycle = 3
+}
+
+public record VehicleSummary(string Brand, string Model);

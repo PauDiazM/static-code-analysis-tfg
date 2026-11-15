@@ -10,6 +10,7 @@ public class LoopTests
 
         // Foreach loop
         string[] fruits = { "Apple", "Banana", "Cherry" };
+        Console.WriteLine(fruits[0]);
         foreach (string fruit in fruits)
         {
             Console.WriteLine(fruit);
