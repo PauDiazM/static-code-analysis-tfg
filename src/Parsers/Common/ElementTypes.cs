@@ -16,6 +16,8 @@ public enum ElementKind
 
     Callable,
     Property,
+    AccessorList,
+    Accessor,
     Indexer,
     Field,
     Event,

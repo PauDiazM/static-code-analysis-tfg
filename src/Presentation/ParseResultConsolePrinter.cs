@@ -43,6 +43,7 @@ public sealed class ParseResultConsolePrinter
             LiteralElement literal => $" {literal.Value}",
             OperatorElement @operator => $" {@operator.Operator}",
             IsExpressionElement isExpression => $" {isExpression.Pattern}",
+            AccessorElement accessorElement => $" {accessorElement.Keyword}",
             _ => string.Empty
         };
 

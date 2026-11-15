@@ -22,6 +22,8 @@ internal sealed class CSharpElementMapper
         [typeof(DestructorDeclarationSyntax)] = ElementKind.Callable,
         [typeof(LocalFunctionStatementSyntax)] = ElementKind.Callable,
         [typeof(PropertyDeclarationSyntax)] = ElementKind.Property,
+        [typeof(AccessorListSyntax)] = ElementKind.AccessorList,
+        [typeof(AccessorDeclarationSyntax)] = ElementKind.Accessor,
         [typeof(IndexerDeclarationSyntax)] = ElementKind.Indexer,
         [typeof(FieldDeclarationSyntax)] = ElementKind.Field,
         [typeof(EventDeclarationSyntax)] = ElementKind.Event,
@@ -132,6 +134,11 @@ internal sealed class CSharpElementMapper
                 parameter.Name = parameterSyntax.Identifier.ValueText;
                 parameter.Type = parameterSyntax.Type?.ToString() ?? string.Empty;
                 parameter.IsNullable = parameterSyntax.Type is NullableTypeSyntax;
+                break;
+
+            case AccessorElement accessor when syntaxNode is AccessorDeclarationSyntax accessorSyntax:
+                accessor.Keyword = accessorSyntax.Keyword.ValueText;
+                accessor.Modifiers = accessorSyntax.Modifiers.Select(modifier => modifier.ValueText).ToList();
                 break;
 
             case DeclarationElement declaration:

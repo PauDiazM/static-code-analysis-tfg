@@ -7,6 +7,7 @@ public class ElementTranslator : IElementTranslator
         return kind switch
         {
             ElementKind.Import => new ImportElement(),
+            ElementKind.Accessor => new AccessorElement(),
             ElementKind.Class or ElementKind.Struct or ElementKind.Template
                 or ElementKind.Interface or ElementKind.Record or ElementKind.Enum
                 or ElementKind.Namespace => new DeclarationElement(kind),
