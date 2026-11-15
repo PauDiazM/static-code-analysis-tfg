@@ -67,6 +67,7 @@ internal sealed class CSharpElementMapper
         [typeof(InvocationExpressionSyntax)] = ElementKind.Invocation,
         [typeof(MemberAccessExpressionSyntax)] = ElementKind.MemberAccess,
         [typeof(ArgumentListSyntax)] = ElementKind.ArgumentList,
+        [typeof(BracketedArgumentListSyntax)] = ElementKind.ArgumentList,
         [typeof(ArgumentSyntax)] = ElementKind.Argument,
         [typeof(TypeArgumentListSyntax)] = ElementKind.TypeArgumentList,
         [typeof(LiteralExpressionSyntax)] = ElementKind.Literal,
