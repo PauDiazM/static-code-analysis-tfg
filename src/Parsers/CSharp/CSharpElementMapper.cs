@@ -17,6 +17,7 @@ internal sealed class CSharpElementMapper
         [typeof(InterfaceDeclarationSyntax)] = ElementKind.Interface,
         [typeof(RecordDeclarationSyntax)] = ElementKind.Record,
         [typeof(EnumDeclarationSyntax)] = ElementKind.Enum,
+        [typeof(EnumMemberDeclarationSyntax)] = ElementKind.EnumMember,
         [typeof(MethodDeclarationSyntax)] = ElementKind.Callable,
         [typeof(ConstructorDeclarationSyntax)] = ElementKind.Callable,
         [typeof(DestructorDeclarationSyntax)] = ElementKind.Callable,
@@ -148,6 +149,8 @@ internal sealed class CSharpElementMapper
                         namespaceDeclaration.Name.ToString(),
                     BaseTypeDeclarationSyntax typeDeclaration =>
                         typeDeclaration.Identifier.ValueText,
+                    EnumMemberDeclarationSyntax enumMember =>
+                        enumMember.Identifier.ValueText,
                     _ => string.Empty
                 };
                 break;

@@ -10,6 +10,7 @@ public class ElementTranslator : IElementTranslator
             ElementKind.Accessor => new AccessorElement(),
             ElementKind.Class or ElementKind.Struct or ElementKind.Template
                 or ElementKind.Interface or ElementKind.Record or ElementKind.Enum
+                or ElementKind.EnumMember
                 or ElementKind.Namespace => new DeclarationElement(kind),
             ElementKind.Callable => new CallableElement(),
             ElementKind.Parameter => new ParameterElement(),

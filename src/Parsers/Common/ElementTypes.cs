@@ -13,6 +13,7 @@ public enum ElementKind
     Interface,
     Record,
     Enum,
+    EnumMember,
 
     Callable,
     Property,
