@@ -28,13 +28,12 @@ Aquesta separació permet que cada parser pugui treballar amb les estructures pr
 
 Els següents passos consistiran a acabar de definir les convencions i els elements que formaran aquesta sortida comuna del mòdul de parsing i començar a desenvolupar el mòdul encarregat de transformar-la en la representació intermèdia final. Un cop s'hagi aconseguit generar aquesta representació, es podrà començar a implementar els diferents mètodes d'anàlisi del codi.
 
-Finalment, es mostraran alguns exemples del funcionament actual del mòdul \texttt{Parser}, incloent-hi fragments de codi font en C\# i les corresponents sortides generades. Aquestes sortides consisteixen en un objecte \texttt{ParsedResult}, que conté els diferents elements \texttt{ParsedElement} obtinguts durant el processament, així com els diagnòstics associats. També s'especificarà el conjunt de construccions del llenguatge que actualment es poden processar, amb l'objectiu de proporcionar una visió de l'estat d'implementació del mòdul. Cal destacar que els exemples seleccionats tenen com a finalitat il·lustrar les capacitats actuals del parser i facilitar la identificació de construccions encara no suportades, i no pas constituir un conjunt de proves exhaustiu. Tant el codi del projecte com els exemples referenciats en les figures següents es poden trobar al repositori de GitHub: \url{https://github.com/PauDiazM/static-code-analysis-tfg}.
+Finalment, a la secció següent es mostraran alguns exemples del funcionament actual del mòdul \texttt{Parser}, incloent-hi fragments de codi font en C\# i les corresponents sortides generades. Aquestes sortides consisteixen en un objecte \texttt{ParsedResult}, que conté els diferents elements \texttt{ParsedElement} obtinguts durant el processament, així com els diagnòstics associats. També s'especificarà el conjunt de construccions del llenguatge que actualment es poden processar, amb l'objectiu de proporcionar una visió de l'estat d'implementació del mòdul. Cal destacar que els exemples seleccionats tenen com a finalitat il·lustrar les capacitats actuals del parser i facilitar la identificació de construccions encara no suportades, i no pas constituir un conjunt de proves exhaustiu. Tant el codi del projecte com els exemples referenciats en les figures següents es poden trobar al repositori de GitHub: \url{https://github.com/PauDiazM/static-code-analysis-tfg}.
 
 A la taula següent, «Implementat» indica que la construcció es pot processar amb el tractament previst; «Parcial» indica que només se'n processa una part o que la informació obtinguda és incompleta; «No implementat» indica que encara no té tractament funcional propi. El mapper conserva el text i els nodes fills, i representa com a \texttt{Unknown} les construccions que no tenen una classificació explícita.
 
 \begin{table}[H]
     \centering
-    \caption{Estat actual de suport de les construccions de C\#}
     \label{tab:csharp-support}
     \begin{tabularx}{\textwidth}{X c}
         \hline
@@ -58,8 +57,11 @@ A la taula següent, «Implementat» indica que la construcció es pot processar
         Creació i accés a objectes i arrays & Implementat \\
         Atributs i inicialitzadors & Parcial \\
         \hline
+        \caption{Estat actual de suport de les construccions de C\#}
     \end{tabularx}
 \end{table}
+
+\input{sections/code_examples.tex}
 
 \subsection*{Estructura del projecte}
 

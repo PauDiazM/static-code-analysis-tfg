@@ -1,0 +1,505 @@
+\subsection*{Exemples de funcionament del mòdul Parser}
+\label{sec:parser-code-examples}
+
+En aquest apartat es presenten diversos exemples utilitzats per comprovar el
+funcionament actual del mòdul \texttt{Parser}. Cada exemple inclou el codi font
+d'entrada i una representació resumida dels elements identificats. Per facilitar-ne
+la lectura, s'han omès alguns nodes interns o repetitius de les sortides, com ara
+els identificadors i determinats nodes de tipus, sempre que la seva inclusió no
+sigui necessària per entendre l'estructura reconeguda. Per tant, les sortides que
+es mostren no són una transcripció literal, sinó una síntesi de l'arbre generat.
+
+\subsubsection*{Declaracions de tipus}
+\label{sec:parser-type-declarations}
+
+Aquest exemple permet comprovar el reconeixement de diverses declaracions de tipus
+del llenguatge C\#: una classe, una estructura, una enumeració i un record. La
+classe \texttt{Vehicle} també conté propietats, un camp, un constructor i un mètode,
+mentre que el mètode \texttt{Main} inclou la creació d'un objecte i una invocació.
+
+\begin{lstlisting}[style=code,
+    caption={Fragment del fitxer TypeDeclarationsExample.cs},
+    label={lst:type-declarations-source}]
+using System;
+
+namespace CodeSamples;
+
+public class Vehicle
+{
+    public string Brand { get; set; }
+    public string Model { get; set; }
+    public int Year { get; set; }
+    private string _privateField = "This is a private field";
+
+    public Vehicle(string brand, string model, int year)
+    {
+        Brand = brand;
+        Model = model;
+        Year = year;
+    }
+
+    public void DisplayInfo()
+    {
+        Console.WriteLine($"Vehicle: {Year} {Brand} {Model}");
+    }
+
+    public static void Main()
+    {
+        Vehicle vehicle = new Vehicle("Volvo", "XC60", 2024);
+        vehicle.DisplayInfo();
+    }
+}
+
+public struct VehicleDimensions
+{
+    public int Length { get; set; }
+    public int Width { get; set; }
+}
+
+public enum VehicleKind
+{
+    Car = 1,
+    Truck = 2,
+    Motorcycle = 3
+}
+
+public record VehicleSummary(string Brand, string Model);
+\end{lstlisting}
+
+El codi font complet d'aquest exemple es pot consultar
+a \href{https://github.com/PauDiazM/static-code-analysis-tfg/blob/main/code_samples/examples/TypeDeclarationsExample.cs}{TypeDeclarationsExample.cs}.
+
+La sortida següent resumeix els elements principals identificats pel parser:
+
+\begin{lstlisting}[style=output,
+    caption={Sortida resumida del mòdul Parser per a les declaracions de tipus},
+    label={lst:type-declarations-output}]
+CompilationUnit
+  Import: System
+  Namespace: CodeSamples
+    Class: Vehicle
+      Property
+      Property
+      Property
+      Field
+        VariableDeclaration
+          VariableDeclarator
+            EqualsValue
+              Literal: This is a private field
+      Callable: Vehicle(public)
+        ParameterList
+        Block
+          Assignment
+          Assignment
+          Assignment
+      Callable: DisplayInfo(public): void
+        Block
+          Invocation
+            MemberAccess: Console.WriteLine
+            ArgumentList
+              Argument
+                InterpolatedString
+      Callable: Main(public static): void
+        Block
+          LocalDeclaration
+            VariableDeclaration
+              VariableDeclarator
+                ObjectCreation: Vehicle
+          Invocation
+            MemberAccess: vehicle.DisplayInfo
+    Struct: VehicleDimensions
+      Property
+      Property
+    Enum: VehicleKind
+      EnumMember: Car
+        Literal: 1
+      EnumMember: Truck
+        Literal: 2
+      EnumMember: Motorcycle
+        Literal: 3
+    Record: VehicleSummary
+      ParameterList
+        Parameter: Brand: string
+        Parameter: Model: string
+\end{lstlisting}
+
+En aquest cas, el parser identifica les quatre declaracions de tipus i diversos
+membres de la classe. També reconeix les assignacions del constructor, la invocació
+a \texttt{Console.WriteLine}, la creació d'una instància de \texttt{Vehicle} i els
+membres de l'enumeració.
+
+\subsubsection*{Herència i classes abstractes}
+\label{sec:parser-inheritance}
+
+Aquest exemple comprova el reconeixement d'una classe abstracta i d'una classe que
+n'hereta. També permet observar la representació dels mètodes abstractes i de les
+implementacions que utilitzen el modificador \texttt{override}.
+
+\begin{lstlisting}[style=code,
+    caption={Codi font de l'exemple d'herència i classes abstractes},
+    label={lst:inheritance-source}]
+namespace CodeSamples;
+
+public abstract class Animal
+{
+    public string Name { get; set; }
+    public int ExtremityCount { get; set; }
+    public abstract void MakeSound();
+}
+
+public class Dog : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("Woof");
+    }
+}
+\end{lstlisting}
+
+El codi font complet d'aquest exemple es pot consultar
+a \href{https://github.com/PauDiazM/static-code-analysis-tfg/blob/main/code_samples/examples/AbstractClassExample.cs}{AbstractClassExample.cs}.
+
+\begin{lstlisting}[style=output,
+    caption={Sortida resumida del mòdul Parser per a l'exemple d'herència},
+    label={lst:inheritance-output}]
+CompilationUnit
+  Namespace: CodeSamples
+    Class: Animal
+      Property
+      Property
+      Callable: MakeSound(public abstract): void
+        ParameterList
+    Class: Dog
+      InheritanceList
+        InheritedType: Animal
+      Callable: MakeSound(public override): void
+        ParameterList
+        Block
+          ExpressionStatement
+            Invocation
+              MemberAccess: Console.WriteLine
+              ArgumentList
+                Argument
+                  Literal: Woof
+\end{lstlisting}
+
+La sortida mostra que la relació d'herència es representa mitjançant els nodes
+\texttt{InheritanceList} i \texttt{InheritedType}. Així mateix, els mètodes de
+les dues classes es representen com a elements \texttt{Callable}, conservant els
+modificadors \texttt{abstract} i \texttt{override}.
+
+\subsubsection*{Estructures de control condicionals}
+\label{sec:parser-conditionals}
+
+Aquest exemple conté una estructura \texttt{if}, una branca \texttt{else if} i una
+branca \texttt{else}. També inclou declaracions de variables, expressions binàries
+i assignacions dins dels diferents blocs condicionals.
+
+\begin{lstlisting}[style=code,
+    caption={Codi font de l'exemple d'estructures condicionals},
+    label={lst:conditional-source}]
+public class ConditionalExample
+{
+    public static void Main()
+    {
+        int score = 75;
+        string result = "Unknown";
+
+        if (score >= 90)
+        {
+            result = "Excellent";
+        }
+        else if (score >= 60)
+        {
+            result = "Passed";
+        }
+        else
+        {
+            result = "Try again";
+        }
+
+        Console.WriteLine(result);
+    }
+}
+\end{lstlisting}
+
+El codi font complet d'aquest exemple es pot consultar
+a \href{https://github.com/PauDiazM/static-code-analysis-tfg/blob/main/code_samples/examples/ConditionalExample.cs}{ConditionalExample.cs}.
+
+
+\begin{lstlisting}[style=output,
+    caption={Sortida resumida del mòdul Parser per a les estructures condicionals},
+    label={lst:conditional-output}]
+CompilationUnit
+  Class: ConditionalExample
+    Callable: Main(public static): void
+      Block
+        LocalDeclaration
+          VariableDeclaration
+            VariableDeclarator
+              EqualsValue
+                Literal: 75
+        LocalDeclaration
+          VariableDeclaration
+            VariableDeclarator
+              EqualsValue
+                Literal: Unknown
+        If
+          BinaryExpression: >=
+            Identifier: score
+            Literal: 90
+          Block
+            ExpressionStatement
+              Assignment
+                Identifier: result
+                Literal: Excellent
+          Else
+            If
+              BinaryExpression: >=
+                Identifier: score
+                Literal: 60
+              Block
+                ExpressionStatement
+                  Assignment
+                    Identifier: result
+                    Literal: Passed
+              Else
+                Block
+                  ExpressionStatement
+                    Assignment
+                      Identifier: result
+                      Literal: Try again
+        ExpressionStatement
+          Invocation
+            MemberAccess: Console.WriteLine
+            ArgumentList
+              Argument
+                Identifier: result
+\end{lstlisting}
+
+Cal destacar que la construcció \texttt{else if} es representa com un node
+\texttt{If} niat dins del node \texttt{Else} corresponent. Aquesta representació
+permet mantenir l'estructura jeràrquica de les branques condicionals.
+
+\subsubsection*{Invocacions i accés a membres}
+\label{sec:parser-invocations}
+
+Aquest exemple, de dimensions reduïdes, permet observar com es representa una
+invocació de mètode i l'accés al membre corresponent. També mostra el tractament
+dels arguments i dels literals de tipus cadena.
+
+\begin{lstlisting}[style=code,
+    caption={Codi font de l'exemple d'invocació},
+    label={lst:invocation-source}]
+class HelloWorld
+{
+    static void Main()
+    {
+        Console.WriteLine("Hello World!");
+    }
+}
+\end{lstlisting}
+
+El codi font complet d'aquest exemple es pot consultar
+a \href{https://github.com/PauDiazM/static-code-analysis-tfg/blob/main/code_samples/examples/HelloWorld.cs}{HelloWorld.cs}.
+
+\begin{lstlisting}[style=output,
+    caption={Sortida resumida del mòdul Parser per a una invocació},
+    label={lst:invocation-output}]
+CompilationUnit
+  Class: HelloWorld
+    Callable: Main(static): void
+      ParameterList
+      Block
+        ExpressionStatement
+          Invocation
+            MemberAccess: Console.WriteLine
+            ArgumentList
+              Argument
+                Literal: Hello World!
+\end{lstlisting}
+
+En aquest cas, la invocació es representa mitjançant un node \texttt{Invocation},
+que conté l'accés al membre \texttt{Console.WriteLine} i la llista d'arguments.
+
+\subsubsection*{Declaracions d'interfícies}
+\label{sec:parser-interfaces}
+
+Aquest exemple comprova el reconeixement de les interfícies i dels mètodes que s'hi
+declaren sense proporcionar-ne una implementació.
+
+\begin{lstlisting}[style=code,
+    caption={Codi font de l'exemple d'interfície},
+    label={lst:interface-source}]
+public interface Game
+{
+    void Start();
+    void Stop();
+    void Pause();
+}
+\end{lstlisting}
+
+El codi font complet d'aquest exemple es pot consultar
+a \href{https://github.com/PauDiazM/static-code-analysis-tfg/blob/main/code_samples/examples/InterfaceExample.cs}{InterfaceExample.cs}.
+
+\begin{lstlisting}[style=output,
+    caption={Sortida resumida del mòdul Parser per a una interfície},
+    label={lst:interface-output}]
+CompilationUnit
+  Interface: Game
+    Callable: Start(): void
+      ParameterList
+    Callable: Stop(): void
+      ParameterList
+    Callable: Pause(): void
+      ParameterList
+\end{lstlisting}
+
+Els mètodes declarats a la interfície es representen amb el mateix tipus genèric
+\texttt{Callable} que s'utilitza per als mètodes de les classes. D'aquesta manera,
+es manté una representació comuna per a les declaracions de mètodes, independentment
+del tipus que les conté.
+
+\subsubsection*{Estructures iteratives i arrays}
+\label{sec:parser-loops-arrays}
+
+L'últim exemple inclou les quatre estructures iteratives principals de C\#:
+\texttt{for}, \texttt{foreach}, \texttt{while} i \texttt{do-while}. També permet
+comprovar el reconeixement de tipus array, inicialitzadors, accessos a elements i
+expressions d'increment.
+
+\begin{lstlisting}[style=code,
+    caption={Codi font de l'exemple d'estructures iteratives i arrays},
+    label={lst:loops-source}]
+public class LoopTests
+{
+    public static void Main(string[] args)
+    {
+        // Common C# loop
+        for (int i = 0; i < 5; i++)
+        {
+            Console.WriteLine($"Iteration {i + 1}");
+        }
+
+        // Foreach loop
+        string[] fruits = { "Apple", "Banana", "Cherry" };
+        Console.WriteLine(fruits[0]);
+        foreach (string fruit in fruits)
+        {
+            Console.WriteLine(fruit);
+        }
+
+        // While loop
+        int count = 0;
+        while (count < 3)
+        {
+            count++;
+        }
+
+        // Do-while loop
+        int doCount = 0;
+        do
+        {
+            doCount++;
+        } while (doCount < 2);
+    }
+}
+\end{lstlisting}
+
+El codi font complet d'aquest exemple es pot consultar
+a \href{https://github.com/PauDiazM/static-code-analysis-tfg/blob/main/code_samples/examples/LoopExample.cs}{LoopExample.cs}.
+
+\begin{lstlisting}[style=output,
+    caption={Sortida resumida del mòdul Parser per a les estructures iteratives},
+    label={lst:loops-output}]
+CompilationUnit
+  Class: LoopTests
+    Callable: Main(public static): void
+      ParameterList
+        Parameter: args: string[]
+          ArrayType
+            ArrayDimensionList
+              ArrayDimension
+      Block
+        For
+          VariableDeclaration
+            VariableDeclarator
+              EqualsValue
+                Literal: 0
+          BinaryExpression: <
+            Identifier: i
+            Literal: 5
+          PostfixUnaryExpression: ++
+            Identifier: i
+          Block
+            ExpressionStatement
+              Invocation
+                MemberAccess: Console.WriteLine
+                ArgumentList
+                  Argument
+                    InterpolatedString
+                      Interpolation
+                        BinaryExpression: +
+        LocalDeclaration
+          VariableDeclaration
+            ArrayType
+              ArrayDimensionList
+                ArrayDimension
+            VariableDeclarator
+              EqualsValue
+                Initializer
+                  Literal: Apple
+                  Literal: Banana
+                  Literal: Cherry
+        ExpressionStatement
+          Invocation
+            MemberAccess: Console.WriteLine
+            ArgumentList
+              Argument
+                ElementAccess: fruits
+                  ArgumentList
+                    Argument
+                      Literal: 0
+        ForEach
+          PredefinedType
+          Identifier: fruits
+          Block
+            ExpressionStatement
+              Invocation
+                MemberAccess: Console.WriteLine
+                ArgumentList
+                  Argument
+                    Identifier: fruit
+        LocalDeclaration
+          VariableDeclaration
+            VariableDeclarator
+              EqualsValue
+                Literal: 0
+        While
+          BinaryExpression: <
+            Identifier: count
+            Literal: 3
+          Block
+            ExpressionStatement
+              PostfixUnaryExpression: ++
+                Identifier: count
+        LocalDeclaration
+          VariableDeclaration
+            VariableDeclarator
+              EqualsValue
+                Literal: 0
+        DoWhile
+          Block
+            ExpressionStatement
+              PostfixUnaryExpression: ++
+                Identifier: doCount
+          BinaryExpression: <
+            Identifier: doCount
+            Literal: 2
+\end{lstlisting}
+
+La sortida mostra que cada estructura iterativa disposa d'un node específic. També
+s'hi poden observar els nodes utilitzats per representar les dimensions dels arrays,
+la seva inicialització i l'accés a un dels seus elements. En el cas del bucle
+\texttt{for}, la inicialització, la condició i l'actualització apareixen com a
+components diferenciats del node corresponent.

@@ -12,6 +12,8 @@
 ]{biblatex}
 \usepackage{tabularx}
 \usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
 
 \addbibresource{bibliography.bib}
 \newenvironment{objectius}{
@@ -42,6 +44,31 @@
     \end{tcolorbox}
 
     \vspace{0.5em}
+}
+
+\lstdefinestyle{code}{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    breakatwhitespace=false,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=5pt,
+    frame=single,
+    rulecolor=\color{black!20},
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b
+}
+
+\lstdefinestyle{output}{
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    breakatwhitespace=false,
+    numbers=none,
+    frame=single,
+    rulecolor=\color{black!20},
+    showstringspaces=false,
+    captionpos=b
 }
 
 \begin{document}
