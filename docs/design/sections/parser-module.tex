@@ -1,24 +1,25 @@
 \section*{Mòdul del parser}
-Aquest mòdul és l'encarregat de conectar el parser amb la resta del sistema. La seva funció és rebre el fitxer, conectar-se amb el parser i retornar el resultat obtingut.
-L'objectiu d'aquest mòdul és connectar amb el parser, recollir la informació i retornar-la al programa encarregat de crear la representació intermitja (IR).
+Aquest mòdul actua com a pont entre l'entrada del programa i la representació intermèdia. La seva responsabilitat principal és instanciar el parser adequat, llegir el fitxer d'entrada, convertir l'\textit{AST} a elements normalitzats i retornar un resultat estructurat que pugui ser consumit per les anàlisis posteriors. A la implementació actual, la factoria \texttt{ParserFactory} decideix quin parser crear i, per a C\#, la classe \texttt{CSharpParser} usa Roslyn per obtenir el \texttt{SyntaxTree} i extreure la informació rellevant.
+
+La figura~\ref{fig:parser_module} mostra el flux del mòdul: el fitxer entra al parser, el model del llenguatge es transforma mitjançant \texttt{CSharpElementMapper} i \texttt{ElementTranslator}, i finalment es retorna un \texttt{ParseResult} amb l'arrel del model i els diagnòstics generats durant la lectura. Aquest enfocament permet que la resta del sistema treballi sobre una estructura comuna i no depengui de la API específica de Roslyn.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/parser-module.png}
-    \caption{Arquitectura del mòdul del parser}
+    \includegraphics[width=0.8\textwidth]{../tfg/first_progress_report/figures/parser_module.png}
+    \caption{Flux del mòdul del parser i adaptació del model de Roslyn a la representació comuna.}
     \label{fig:parser_module}
 \end{figure}
 
-Aquest mòdul s'implementarà de manera progressiva, començant per una versió inicial que només contingui les funciones bàsiques i s'anirà interant sobre aquest primer prototip. Els objectius d'aquest mòdul són: \\
+El mòdul es pot desenvolupar de manera progressiva, començant per una versió inicial centrada en fitxers individuals i ampliant posteriorment la cobertura a projectes complets. Els objectius principals d'evolució són: \\
 \\
 \begin{tabular}{|c|c|}
-    
+    \hline
     \textbf{Versió inicial} & \textbf{Versió final} \\
     \hline
-    Treball únicament amb arxius individuals & Treball amb projectes complets \\ [0.3cm]
-
-    Especificació manual del llenguatge & Detecció automàtica del llenguatge \\ [0.3cm]
-
+    Treball únicament amb fitxers individuals & Treball amb projectes complets \\ [0.3cm]
+    \hline
+    Detecció o especificació manual del llenguatge & Detecció automàtica del llenguatge \\ [0.3cm]
+    \hline
     Instanciament manual del parser & Instanciament automàtic del parser \\ [0.3cm]
-
+    \hline
 \end{tabular}

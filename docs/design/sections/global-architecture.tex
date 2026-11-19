@@ -1,10 +1,12 @@
 \section*{Arquitectura global}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../../docs/tfg/initial_report/figures/estructura_inicial_TFG.png}
-    \caption{Arquitectura global del sistema}
+    \includegraphics[width=0.8\textwidth]{../tfg/first_progress_report/figures/estructura_general_TFG.png}
+    \caption{Arquitectura general del sistema i les seves capes principals.}
     \label{fig:global_architecture}
 \end{figure}
 
-La implementació del parser no forma part de l'abast del projecte i, per tant, s'utilitzaran eines existents com poden ser Clang en C++ i Roslyn en C\# per tal de fer l'anàlisi sintàctica i semàntica dels programes.
+La figura~\ref{fig:global_architecture} resumeix l'arquitectura general del projecte: una capa d'aplicació que selecciona el fitxer d'entrada, una capa de parsing específica per llenguatge i una capa de representació intermèdia que normalitza la informació per a les anàlisis posteriors. A la implementació actual, el punt d'entrada \texttt{Program.cs} llista els exemples de C\#, demana una elecció a l'usuari i invoca la factoria de parsers.
+
+La classe \texttt{ParserFactory} detecta el llenguatge del fitxer i crea el parser adequat. En el cas de C\#, aquest parser es basa en Roslyn per obtenir l'\textit{Abstract Syntax Tree} i transformar-lo en un model comú de nodes. La sortida s'emmagatzema en \texttt{ParseResult}, que encapsula l'arrel del model i els diagnòstics associats al procés de parsing. Aquesta separació permet que les etapes posteriors no depenguin de la libreria concreta utilitzada per analitzar el codi font.
 
