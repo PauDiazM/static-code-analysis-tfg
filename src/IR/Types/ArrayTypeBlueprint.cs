@@ -1,13 +1,16 @@
+using IR.References;
+
 namespace IR.Types;
 
 public class ArrayTypeBlueprint : TypeBlueprint
 {
-    public ArrayTypeBlueprint(string name)
+    public ArrayTypeBlueprint(string name, TypeReference elementType)
         : base(name)
     {
+        ElementType = elementType ?? throw new ArgumentNullException(nameof(elementType));
     }
 
-    public TypeBlueprint? ElementType { get; set; }
+    public TypeReference ElementType { get; }
 
     public int Rank { get; private set; } = 1;
 

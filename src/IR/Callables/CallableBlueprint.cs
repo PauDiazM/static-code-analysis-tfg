@@ -1,5 +1,5 @@
 using IR.Statements;
-using IR.Types;
+using IR.References;
 using IR.Variables;
 
 namespace IR.Callables;
@@ -8,18 +8,19 @@ public abstract class CallableBlueprint : NamedBlueprint
 {
     private readonly List<ParameterBlueprint> _parameters = [];
 
-    protected CallableBlueprint(string name)
+     protected CallableBlueprint(string name, TypeReference returnType)
         : base(name)
     {
+        ReturnType = returnType ?? throw new ArgumentNullException(nameof(returnType));
     }
 
-    public TypeBlueprint? ReturnType { get; private set; }
+    public TypeReference ReturnType { get; }
 
     public IReadOnlyList<ParameterBlueprint> Parameters => _parameters;
 
-    public BlockStatementBlueprint? Body { get; private set; }
+    public BlockStatementBlueprint? Body { get; set; }
 
-    public CallableModifiers Modifiers { get; private set; }
+    public CallableModifiers Modifiers { get; set; }
 
     public void AddParameter(ParameterBlueprint parameter)
     {
@@ -32,9 +33,4 @@ public abstract class CallableBlueprint : NamedBlueprint
         _parameters.Add(parameter);
     }
 
-    public void SetBody(BlockStatementBlueprint? body) => Body = body;
-
-    public void SetModifiers(CallableModifiers modifiers) => Modifiers = modifiers;
-
-    protected void SetReturnType(TypeBlueprint? returnType) => ReturnType = returnType;
 }

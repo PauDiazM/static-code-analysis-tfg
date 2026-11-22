@@ -1,4 +1,4 @@
-using IR.Types;
+using IR.References;
 
 namespace IR.Members;
 
@@ -6,15 +6,17 @@ public class PropertyBlueprint : NamedBlueprint, IMember
 {
     public PropertyBlueprint(
         string name,
-        Guid containerId)
+        Guid containerId,
+        TypeReference type)
         : base(name)
     {
+        Type = type ?? throw new ArgumentNullException(nameof(type));
         ContainerId = containerId != Guid.Empty
             ? containerId
             : throw new ArgumentException("Container ID cannot be empty.", nameof(containerId));
     }
 
-    public TypeBlueprint? Type { get; set; }
+    public TypeReference Type { get; }
 
     public Guid ContainerId { get; }
 

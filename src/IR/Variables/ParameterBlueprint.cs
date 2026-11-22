@@ -1,11 +1,13 @@
+using IR.References;
+
 namespace IR.Variables;
 
 public class ParameterBlueprint : VariableBlueprint
 {
     private readonly List<string> _passingModifiers = [];
 
-    public ParameterBlueprint(string name)
-        : base(name)
+    public ParameterBlueprint(string name, TypeReference type)
+        : base(name, type)
     {
     }
 

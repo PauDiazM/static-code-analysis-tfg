@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using IR.Callables;
 using IR.Members;
+using IR.References;
 using IR.Variables;
 
 namespace IR.Types;
@@ -17,7 +18,7 @@ public class CompoundTypeBlueprint : TypeBlueprint, IContainerBlueprint
 
     private readonly List<DestructorBlueprint> _destructors = [];
 
-    private readonly List<TypeBlueprint> _implementedInterfaces = [];
+    private readonly List<TypeReference> _implementedInterfaces = [];
 
     public CompoundTypeBlueprint(
         string name)
@@ -38,7 +39,7 @@ public class CompoundTypeBlueprint : TypeBlueprint, IContainerBlueprint
 
     public IReadOnlyList<DestructorBlueprint> Destructors => _destructors;
 
-    public IReadOnlyList<TypeBlueprint> ImplementedInterfaces => _implementedInterfaces;
+    public IReadOnlyList<TypeReference> ImplementedInterfaces => _implementedInterfaces;
 
     public CompoundTypeCharacteristics Characteristics { get; set; }
 
@@ -54,13 +55,13 @@ public class CompoundTypeBlueprint : TypeBlueprint, IContainerBlueprint
     public void AddDestructor(DestructorBlueprint destructor) =>
         AddMember(_destructors, destructor, nameof(destructor));
 
-    public void AddImplementedInterface(CompoundTypeBlueprint @interface) 
+    public void AddImplementedInterface(TypeReference @interface)
     {
         ArgumentNullException.ThrowIfNull(@interface);
 
-        if (_implementedInterfaces.Any(existing => existing.Id == @interface.Id))
+        if (_implementedInterfaces.Any(existing => ReferenceEquals(existing, @interface)))
         {
-            throw new ArgumentException("The same interface cannot be added more than once, ID: ", @interface.Name);
+            throw new ArgumentException("The same interface cannot be added more than once.", nameof(@interface));
         }
 
         _implementedInterfaces.Add(@interface);

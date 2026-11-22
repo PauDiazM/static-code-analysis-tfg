@@ -21,17 +21,14 @@ public class MemberAccessExpressionBlueprint : ExpressionBlueprint
     {
         Declaration = declaration ?? throw new ArgumentNullException(nameof(declaration));
 
-        if (declaration is VariableBlueprint variable)
+        ResultType = declaration switch
         {
-            SetResultType(variable.Type);
-        }
-        else if (declaration is PropertyBlueprint property)
-        {
-            SetResultType(property.Type);
-        }
-        else if (declaration is CallableBlueprint callable)
-        {
-            SetResultType(callable.ReturnType);
-        }
+            VariableBlueprint variable => variable.Type,
+            PropertyBlueprint property => property.Type,
+            CallableBlueprint callable => callable.ReturnType,
+            _ => throw new ArgumentException(
+                $"Unsupported declaration type: {declaration.GetType().Name}",
+                nameof(declaration))
+        };
     }
 }

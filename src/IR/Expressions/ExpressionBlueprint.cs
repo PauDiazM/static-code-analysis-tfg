@@ -1,4 +1,4 @@
-using IR.Types;
+using IR.References;
 
 namespace IR.Expressions;
 
@@ -8,7 +8,5 @@ public abstract class ExpressionBlueprint : Blueprint
     {
     }
 
-    public TypeBlueprint? ResultType { get; private set; }
-
-    public void SetResultType(TypeBlueprint? resultType) => ResultType = resultType;
+    public TypeReference? ResultType { get; set; }
 }

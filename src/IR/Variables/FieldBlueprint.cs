@@ -1,9 +1,11 @@
+using IR.References;
+
 namespace IR.Variables;
 
 public class FieldBlueprint : VariableBlueprint, IMember
 {
-    public FieldBlueprint(string name, Guid containerId)
-        : base(name)
+    public FieldBlueprint(string name, Guid containerId, TypeReference type)
+        : base(name, type)
     {
         ContainerId = containerId != Guid.Empty
             ? containerId
