@@ -7,9 +7,8 @@ public class PrimitiveTypeBlueprint : TypeBlueprint
     {
     }
 
-    public PrimitiveTypeKind Kind { get; private set; }
+    public PrimitiveTypeKind Kind { get; set; }
 
     public string OriginalName => Name;
 
-    public void SetKind(PrimitiveTypeKind kind) => Kind = kind;
 }
