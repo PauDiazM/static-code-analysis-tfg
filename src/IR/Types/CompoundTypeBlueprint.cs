@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using IR.Callables;
 using IR.Members;
 using IR.References;
@@ -18,16 +17,18 @@ public class CompoundTypeBlueprint : TypeBlueprint, IContainerBlueprint
 
     private readonly List<DestructorBlueprint> _destructors = [];
 
+    private readonly List<TypeReference> _baseTypes = [];
+
     private readonly List<TypeReference> _implementedInterfaces = [];
 
     public CompoundTypeBlueprint(
-        string name)
+        string name, CompoundTypeKind kind)
         : base(name)
     {
-        Kind = CompoundTypeKind.Unknown;
+        Kind = kind;
     }
 
-    public CompoundTypeKind Kind { get; set; }
+    public CompoundTypeKind Kind { get; }
 
     public IReadOnlyList<MethodBlueprint> Methods => _methods;
 
@@ -38,6 +39,8 @@ public class CompoundTypeBlueprint : TypeBlueprint, IContainerBlueprint
     public IReadOnlyList<ConstructorBlueprint> Constructors => _constructors;
 
     public IReadOnlyList<DestructorBlueprint> Destructors => _destructors;
+
+    public IReadOnlyList<TypeReference> BaseTypes => _baseTypes;
 
     public IReadOnlyList<TypeReference> ImplementedInterfaces => _implementedInterfaces;
 
@@ -54,6 +57,18 @@ public class CompoundTypeBlueprint : TypeBlueprint, IContainerBlueprint
 
     public void AddDestructor(DestructorBlueprint destructor) =>
         AddMember(_destructors, destructor, nameof(destructor));
+
+    public void AddBaseType(TypeReference baseType)
+    {
+        ArgumentNullException.ThrowIfNull(baseType);
+
+        if(_baseTypes.Any(existing => ReferenceEquals(existing, baseType)))
+        {
+            throw new ArgumentException("The same base type cannot be added more than once", nameof(baseType));
+        }
+
+        _baseTypes.Add(baseType);
+    }
 
     public void AddImplementedInterface(TypeReference @interface)
     {
