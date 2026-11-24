@@ -1,6 +1,6 @@
 namespace IR.Organization;
 
-public class NamespaceBlueprint : NamedBlueprint, IContainerBlueprint
+public class NamespaceBlueprint : NamedBlueprint
 {
     private readonly List<Blueprint> _declarations = [];
 

@@ -5,7 +5,7 @@ using IR.Variables;
 
 namespace IR.Types;
 
-public class CompoundTypeBlueprint : TypeBlueprint, IContainerBlueprint
+public class CompoundTypeBlueprint : TypeBlueprint
 {
     private readonly List<MethodBlueprint> _methods = [];
 

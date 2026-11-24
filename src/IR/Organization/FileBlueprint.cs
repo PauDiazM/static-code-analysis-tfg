@@ -1,6 +1,6 @@
 namespace IR.Organization;
 
-public class FileBlueprint : Blueprint, IContainerBlueprint
+public class FileBlueprint : Blueprint
 {
     private readonly List<ImportBlueprint> _imports = [];
     private readonly List<Blueprint> _declarations = [];
