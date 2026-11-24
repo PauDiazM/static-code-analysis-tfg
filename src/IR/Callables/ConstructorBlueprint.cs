@@ -1,9 +1,11 @@
+using IR.References;
+
 namespace IR.Callables;
 
 public class ConstructorBlueprint : CallableBlueprint, IMember
 {
-    public ConstructorBlueprint(string name, Guid containerId)
-        : base(name)
+    public ConstructorBlueprint(string name, Guid containerId, TypeReference typeReference)
+        : base(name, typeReference)
     {
         ContainerId = containerId != Guid.Empty
             ? containerId

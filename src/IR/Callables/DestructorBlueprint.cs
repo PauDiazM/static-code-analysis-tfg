@@ -1,9 +1,10 @@
+using IR.References;
 namespace IR.Callables;
 
 public class DestructorBlueprint : CallableBlueprint, IMember
 {
-    public DestructorBlueprint(string name, Guid containerId)
-        : base(name)
+    public DestructorBlueprint(string name, Guid containerId, TypeReference typeReference)
+        : base(name, typeReference)
     {
         ContainerId = containerId != Guid.Empty
             ? containerId
