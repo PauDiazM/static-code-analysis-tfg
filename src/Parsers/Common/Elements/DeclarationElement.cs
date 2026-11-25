@@ -21,4 +21,6 @@ public class ImportElement() : ParsedElement(ElementKind.Import)
 {
     public string ImportedName { get; set; } = string.Empty;
     public string? Alias { get; set; }
+    public bool IsGlobal { get; set; }
+    public bool IsStatic { get; set; }
 }

@@ -126,6 +126,8 @@ internal sealed class CSharpElementMapper
             case ImportElement import when syntaxNode is UsingDirectiveSyntax usingDirective:
                 import.ImportedName = usingDirective.Name?.ToString() ?? string.Empty;
                 import.Alias = usingDirective.Alias?.Name.Identifier.ValueText;
+                import.IsGlobal = usingDirective.GlobalKeyword != default;
+                import.IsStatic = usingDirective.StaticKeyword != default;
                 break;
 
             case CallableElement callable:

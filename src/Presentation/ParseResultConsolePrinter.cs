@@ -33,7 +33,7 @@ public sealed class ParseResultConsolePrinter
             : $" [{element.Span.StartOffset}..{element.Span.EndOffset})";
         string details = element switch
         {
-            ImportElement import => $" {import.ImportedName}",
+            ImportElement import => $" {import.ImportedName}, IsGlobal: {import.IsGlobal}, IsStatic: {import.IsStatic}",
             CallableElement callable =>
                 $" {callable.Name}({string.Join(" ", callable.Modifiers)})" +
                 (callable.ReturnType is null ? string.Empty : $": {callable.ReturnType}"),
