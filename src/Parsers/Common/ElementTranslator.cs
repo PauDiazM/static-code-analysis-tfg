@@ -20,6 +20,9 @@ public class ElementTranslator : IElementTranslator
                 or ElementKind.PostfixUnaryExpression or ElementKind.UnaryExpression
                 or ElementKind.Assignment => new OperatorElement(kind),
             ElementKind.IsExpression => new IsExpressionElement(),
+            ElementKind.VariableDeclarator => new VariableElement(),
+            ElementKind.Property => new DeclarationElement(kind),
+            ElementKind.Field => new DeclarationElement(kind),
             _ => new ParsedElement(kind)
         };
     }

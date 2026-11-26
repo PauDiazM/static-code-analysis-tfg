@@ -34,11 +34,10 @@ public sealed class ParseResultConsolePrinter
         string details = element switch
         {
             ImportElement import => $" {import.ImportedName}, IsGlobal: {import.IsGlobal}, IsStatic: {import.IsStatic}",
-            CallableElement callable =>
-                $" {callable.Name}({string.Join(" ", callable.Modifiers)})" +
-                (callable.ReturnType is null ? string.Empty : $": {callable.ReturnType}"),
             ParameterElement parameter => $" {parameter.Name}: {parameter.Type}",
-            DeclarationElement declaration => $" {declaration.Name}",
+            VariableElement variable => $" Name: {variable.Name}, Modifiers: {string.Join(", ", variable.Modifiers)}" +
+                $"Type: {variable.Type}, IsNullable: {variable.IsNullable}",
+            DeclarationElement declaration => $" Name: {declaration.Name}, Modifiers: {string.Join(", ", declaration.Modifiers)}",
             IdentifierElement identifier => $" {identifier.Name}",
             LiteralElement literal => $" {literal.Value}",
             OperatorElement @operator => $" {@operator.Operator}",

@@ -116,6 +116,8 @@ internal sealed class CSharpElementMapper
             element.Children.Add(Map(child));
         }
 
+        PopulateElementDataFromChildren(element, syntaxNode);
+
         return element;
     }
 
@@ -130,10 +132,6 @@ internal sealed class CSharpElementMapper
                 import.IsStatic = usingDirective.StaticKeyword != default;
                 break;
 
-            case CallableElement callable:
-                PopulateCallable(callable, syntaxNode);
-                break;
-
             case ParameterElement parameter when syntaxNode is ParameterSyntax parameterSyntax:
                 parameter.Name = parameterSyntax.Identifier.ValueText;
                 parameter.Type = parameterSyntax.Type?.ToString() ?? string.Empty;
@@ -142,7 +140,9 @@ internal sealed class CSharpElementMapper
 
             case AccessorElement accessor when syntaxNode is AccessorDeclarationSyntax accessorSyntax:
                 accessor.Keyword = accessorSyntax.Keyword.ValueText;
-                accessor.Modifiers = accessorSyntax.Modifiers.Select(modifier => modifier.ValueText).ToList();
+                accessor.Modifiers = accessorSyntax.Modifiers
+                    .Select(modifier => modifier.ValueText)
+                    .ToList();
                 break;
 
             case DeclarationElement declaration:
@@ -154,8 +154,25 @@ internal sealed class CSharpElementMapper
                         typeDeclaration.Identifier.ValueText,
                     EnumMemberDeclarationSyntax enumMember =>
                         enumMember.Identifier.ValueText,
+                    LocalFunctionStatementSyntax localFunction =>
+                        localFunction.Identifier.ValueText,
                     _ => string.Empty
                 };
+
+                PopulateModifiers(declaration, syntaxNode);
+
+                switch (declaration)
+                {
+                    case CallableElement callable:
+                        PopulateCallable(callable, syntaxNode);
+                        break;
+
+                    case VariableElement variable
+                        when syntaxNode is VariableDeclaratorSyntax declarator:
+                        variable.Name = declarator.Identifier.ValueText;
+                        break;
+                }
+
                 break;
 
             case IdentifierElement identifier:
@@ -190,6 +207,43 @@ internal sealed class CSharpElementMapper
         }
     }
 
+    private static void PopulateElementDataFromChildren(
+    ParsedElement element,
+    SyntaxNode syntaxNode)
+    {
+        switch (syntaxNode)
+        {
+            case VariableDeclarationSyntax variableDeclaration:
+                string type = variableDeclaration.Type is NullableTypeSyntax nullableType
+                    ? nullableType.ElementType.ToString()
+                    : variableDeclaration.Type.ToString();
+
+                bool isNullable = variableDeclaration.Type is NullableTypeSyntax;
+
+                foreach (VariableElement child in element.Children.OfType<VariableElement>())
+                {
+                    child.Type = type;
+                    child.IsNullable = isNullable;
+                }
+                break;
+        }
+    }
+
+    private static void PopulateModifiers(DeclarationElement declaration, SyntaxNode syntaxNode)
+    {
+        IEnumerable<SyntaxToken> modifiers = syntaxNode switch
+        {
+            MemberDeclarationSyntax member => member.Modifiers,
+            LocalFunctionStatementSyntax localFunction => localFunction.Modifiers,
+            _ => []
+        };
+
+        foreach (SyntaxToken modifier in modifiers)
+        {
+            declaration.AddModifier(modifier.ValueText);
+        }
+    }
+
     private static void PopulateCallable(CallableElement callable, SyntaxNode syntaxNode)
     {
         switch (syntaxNode)
@@ -197,11 +251,9 @@ internal sealed class CSharpElementMapper
             case MethodDeclarationSyntax method:
                 callable.Name = method.Identifier.ValueText;
                 callable.ReturnType = method.ReturnType.ToString();
-                callable.Modifiers = method.Modifiers.Select(modifier => modifier.ValueText).ToList();
                 break;
             case ConstructorDeclarationSyntax constructor:
                 callable.Name = constructor.Identifier.ValueText;
-                callable.Modifiers = constructor.Modifiers.Select(modifier => modifier.ValueText).ToList();
                 break;
             case DestructorDeclarationSyntax destructor:
                 callable.Name = destructor.Identifier.ValueText;
@@ -209,7 +261,6 @@ internal sealed class CSharpElementMapper
             case LocalFunctionStatementSyntax localFunction:
                 callable.Name = localFunction.Identifier.ValueText;
                 callable.ReturnType = localFunction.ReturnType.ToString();
-                callable.Modifiers = localFunction.Modifiers.Select(modifier => modifier.ValueText).ToList();
                 break;
         }
     }
