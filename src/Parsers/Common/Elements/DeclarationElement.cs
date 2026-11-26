@@ -40,3 +40,9 @@ public class VariableElement() : DeclarationElement(ElementKind.VariableDeclarat
     public string Type { get; set; } = string.Empty;
     public bool IsNullable { get; set; }
 }
+
+public class PropertyElement() : DeclarationElement(ElementKind.Property)
+{
+    public string Type { get; set; } = string.Empty;
+    public bool IsNullable { get; set; }
+}

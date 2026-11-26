@@ -35,14 +35,15 @@ public sealed class ParseResultConsolePrinter
         {
             ImportElement import => $" {import.ImportedName}, IsGlobal: {import.IsGlobal}, IsStatic: {import.IsStatic}",
             ParameterElement parameter => $" {parameter.Name}: {parameter.Type}",
-            VariableElement variable => $" Name: {variable.Name}, Modifiers: {string.Join(", ", variable.Modifiers)}" +
-                $"Type: {variable.Type}, IsNullable: {variable.IsNullable}",
+            VariableElement variable => $" Name: {variable.Name},Type: {variable.Type}, IsNullable: {variable.IsNullable}",
+            PropertyElement property => $" Name: {property.Name}, Modifiers: {string.Join(", ", property.Modifiers)} " +
+                $"Type: {property.Type}, IsNullable: {property.IsNullable}",
             DeclarationElement declaration => $" Name: {declaration.Name}, Modifiers: {string.Join(", ", declaration.Modifiers)}",
             IdentifierElement identifier => $" {identifier.Name}",
             LiteralElement literal => $" {literal.Value}",
             OperatorElement @operator => $" {@operator.Operator}",
             IsExpressionElement isExpression => $" {isExpression.Pattern}",
-            AccessorElement accessorElement => $" {accessorElement.Keyword}",
+            AccessorElement accessorElement => $" Keyword: {accessorElement.Keyword}, Modifiers: {string.Join(", ", accessorElement.Modifiers)}",
             _ => string.Empty
         };
 

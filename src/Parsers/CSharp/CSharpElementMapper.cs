@@ -116,7 +116,7 @@ internal sealed class CSharpElementMapper
             element.Children.Add(Map(child));
         }
 
-        PopulateElementDataFromChildren(element, syntaxNode);
+        PopulateElementDataFromParent(element, syntaxNode);
 
         return element;
     }
@@ -171,6 +171,16 @@ internal sealed class CSharpElementMapper
                         when syntaxNode is VariableDeclaratorSyntax declarator:
                         variable.Name = declarator.Identifier.ValueText;
                         break;
+
+                    case PropertyElement property
+                        when syntaxNode is PropertyDeclarationSyntax propertyDeclaration:
+                        property.Name = propertyDeclaration.Identifier.ValueText;
+                        property.Type = propertyDeclaration.Type 
+                            is NullableTypeSyntax nullableType ?
+                            nullableType.ElementType.ToString()
+                            : propertyDeclaration.Type.ToString();
+                            
+                        break;
                 }
 
                 break;
@@ -207,7 +217,7 @@ internal sealed class CSharpElementMapper
         }
     }
 
-    private static void PopulateElementDataFromChildren(
+    private static void PopulateElementDataFromParent(
     ParsedElement element,
     SyntaxNode syntaxNode)
     {
@@ -233,6 +243,7 @@ internal sealed class CSharpElementMapper
     {
         IEnumerable<SyntaxToken> modifiers = syntaxNode switch
         {
+            LocalDeclarationStatementSyntax localDec => localDec.Modifiers,
             MemberDeclarationSyntax member => member.Modifiers,
             LocalFunctionStatementSyntax localFunction => localFunction.Modifiers,
             _ => []

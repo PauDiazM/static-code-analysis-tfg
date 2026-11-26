@@ -21,8 +21,9 @@ public class ElementTranslator : IElementTranslator
                 or ElementKind.Assignment => new OperatorElement(kind),
             ElementKind.IsExpression => new IsExpressionElement(),
             ElementKind.VariableDeclarator => new VariableElement(),
-            ElementKind.Property => new DeclarationElement(kind),
+            ElementKind.Property => new PropertyElement(),
             ElementKind.Field => new DeclarationElement(kind),
+            ElementKind.LocalDeclaration => new DeclarationElement(kind),
             _ => new ParsedElement(kind)
         };
     }
