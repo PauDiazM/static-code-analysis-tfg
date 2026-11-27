@@ -116,7 +116,7 @@ internal sealed class CSharpElementMapper
             element.Children.Add(Map(child));
         }
 
-        PopulateElementDataFromParent(element, syntaxNode);
+        PopulateDerivedElementData(element, syntaxNode);
 
         return element;
     }
@@ -214,10 +214,15 @@ internal sealed class CSharpElementMapper
                 when syntaxNode is IsPatternExpressionSyntax isPatternExpression:
                 isExpression.Pattern = isPatternExpression.Pattern.ToString();
                 break;
+
+            case GenericNameElement genericName
+                when syntaxNode is GenericNameSyntax genericNameSyntax:
+                genericName.BaseType = genericNameSyntax.Identifier.ValueText;
+                break;
         }
     }
 
-    private static void PopulateElementDataFromParent(
+    private static void PopulateDerivedElementData(
     ParsedElement element,
     SyntaxNode syntaxNode)
     {
@@ -234,6 +239,17 @@ internal sealed class CSharpElementMapper
                 {
                     child.Type = type;
                     child.IsNullable = isNullable;
+                }
+                break;
+            case GenericNameSyntax:
+                if (element is GenericNameElement genericName &&
+                    element.Children.FirstOrDefault(
+                        child => child.Kind == ElementKind.TypeArgumentList) is ParsedElement typeArgumentList)
+                {
+                    foreach (ParsedElement argument in typeArgumentList.Children)
+                    {
+                        genericName.AddArgumentType(argument);
+                    }
                 }
                 break;
         }

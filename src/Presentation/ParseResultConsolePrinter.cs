@@ -44,6 +44,7 @@ public sealed class ParseResultConsolePrinter
             OperatorElement @operator => $" {@operator.Operator}",
             IsExpressionElement isExpression => $" {isExpression.Pattern}",
             AccessorElement accessorElement => $" Keyword: {accessorElement.Keyword}, Modifiers: {string.Join(", ", accessorElement.Modifiers)}",
+            GenericNameElement genericName => GetGenericTypeInfo(genericName),
             _ => string.Empty
         };
 
@@ -52,5 +53,16 @@ public sealed class ParseResultConsolePrinter
         {
             PrintElement(child, depth + 1);
         }
+    }
+
+    private static string GetGenericTypeInfo(GenericNameElement element)
+    {
+        string arguments = string.Join(", ",
+            element.ArgumentTypes.Select(argument =>
+                argument is GenericNameElement generic
+                    ? $"[{GetGenericTypeInfo(generic)}]"
+                    : argument.Text));
+
+        return $"Base Type: {element.BaseType}, Arguments: {arguments}";
     }
 }

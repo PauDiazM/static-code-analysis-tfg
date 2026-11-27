@@ -32,6 +32,10 @@ public struct VehicleDimensions
 {
     public int Length { get; set; }
     public int Width { get; set; }
+
+    public List<Dictionary<string, int>, int> intList;
+    Vehicle? vehicleNullable;
+    Vehicle[] vehicleArray;
 }
 
 public enum VehicleKind

@@ -24,6 +24,7 @@ public class ElementTranslator : IElementTranslator
             ElementKind.Property => new PropertyElement(),
             ElementKind.Field => new DeclarationElement(kind),
             ElementKind.LocalDeclaration => new DeclarationElement(kind),
+            ElementKind.GenericName => new GenericNameElement(),
             _ => new ParsedElement(kind)
         };
     }
